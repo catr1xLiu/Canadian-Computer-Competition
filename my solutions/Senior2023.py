@@ -18,7 +18,7 @@ for i in tmp:
 
 """ the solution"""
 ans = 0
-for i in range(c):  # go through all the colums
+for i in range(c):  # go through all the columns
     if i % 2:  # if the two triangles in the colum are laid top-to-top
         
         # no mater what, the bottom sides of the two triangles are highlighted whenever they are wet
@@ -30,9 +30,9 @@ for i in range(c):  # go through all the colums
         # the right sides of the upper and lower triangles are highlighted whenever they are wet and the sector after(on the right of) them are dry (if there are any triangles on the right, in the first place)
         flag = i+1 == c # whether the triangles are the most-righter ones
         ans += (row1[i] and  # the upper triangle is wet and, 
-        (flag or (not row1[i+1])))  # its righter neibour is dry or it does not even have a righter neibour
+        (flag or (not row1[i+1])))  # its righter neighbour is dry or it does not even have a righter neighbour
         + (row2[i] and  # the lower triangle is wet and, 
-        (flag or (not row2[i+1])))  # its righter neibour is dry or it does not even have a righter neibour
+        (flag or (not row2[i+1])))  # its righter neighbour is dry or it does not even have a righter neighbour
     
     else:  # if the two triangles in the colum are laid bottom-by-bottom
         
@@ -42,14 +42,16 @@ for i in range(c):  # go through all the colums
         # the left sides of the upper and lower triangles are highlighted whenever they are wet and the triangles before(on the left of) them are dry (if there are any triangles on the left, in the first place)
         flag = not i # whether the triangles are the most-lefter ones
         ans += (row1[i] and  # the upper triangle is wet and, 
-        (flag or (not row1[i-1])))  # its righter neibour is dry or it does not even have a righter neibour
+        (flag or (not row1[i-1])))  # its righter neighbour is dry or it does not even have a righter neighbour
         + (row2[i] and  # the lower triangle is wet and, 
-        (flag or (not row2[i-1])))  # its righter neibour is dry or it does not even have a righter neibour
+        (flag or (not row2[i-1])))  # its righter neighbour is dry or it does not even have a righter neighbour
         
+        flag = i+1 == c # whether the triangles are the most-righter ones
         # the right sides of the upper and lower triangles are highlighted whenever they are wet and the sector after(on the right of) them are dry (if there are any triangles on the right, in the first place)
         ans += (row1[i] and  # the upper triangle is wet and, 
-        (flag or (not row1[i+1])))  # its righter neibour is dry or it does not even have a righter neibour
+        (flag or (not row1[i+1])))  # its righter neighbour is dry or it does not even have a righter neighbour
         + (row2[i] and  # the lower triangle is wet and, 
-        (flag or (not row2[i+1])))  # its righter neibour is dry or it does not even have a righter neibour
+        (flag or (not row2[i+1])))  # its righter neighbour is dry or it does not even have a righter neighbour
         
-print(ans)
+    print(i, ans)
+# print(ans)
