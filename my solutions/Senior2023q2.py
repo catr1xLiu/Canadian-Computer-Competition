@@ -1,7 +1,7 @@
 from copy import deepcopy as cp
 
 n = int(input())
-tmp = input.split()
+tmp = input().split()
 h=[]
 for i in tmp:
     h.append(int(i))
@@ -16,8 +16,8 @@ def find_asymmetric_value(heights):
     
 for length in range(1,n+1):
     min_asymmetric = float("inf")
-    for start in range(n-length):
+    for start in range(n-length+1):
         end = start+length
         h1 = cp(h[start:end])
-        min_asymmetric = min(find_asymmetric(h1), min_asymmetric)
+        min_asymmetric = min(find_asymmetric_value(h1), min_asymmetric)
     print(min_asymmetric,end=" ")
