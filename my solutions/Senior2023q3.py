@@ -92,7 +92,7 @@ def dfs(grid:Grid):
   for i in range(n):
     for j in range(m):
       option = grid.copy()
-      if option.nums[i][j] + 1 >= 2:
+      if option.nums[i][j] + 1 >= 3:
         continue
       option.update(i, j, option.nums[i][j] + 1)
       if (option.get_number_of_asymmetric_rows(), option.get_number_of_asymmetric_colums()) in path:
