@@ -1,5 +1,39 @@
-# solution for senior 2023 question 3
+ # solution for senior 2023 question 3
+'''
+Problem Description
+Ryo and Kita are designing a new poster for Kessoku Band. After some furious brainstorming, they came to the conclusion that the poster should come in the form of a 2-D grid of lowercase English letters (i.e. a to z), with N rows and M columns.
+Furthermore, it is known that Ryo and Kita both have peculiar tastes palindromes.  Ryo will only be satisfied with the poster if exactly R of its rows are palindromes, and Kita will only be satisfied with the poster if exactly C of its columns are palindromes.
+Can you design a poster that will satisfy both Ryo and Kita, or determine that it is impossible to do so?
+Note: A string is considered a palindrome if it is the same when read forwards and backwards. For example, kayak and bb are palindromes, whereas guitar and live are not.
 
+Input Specification
+The first and only line of input consists of 4 space-separated integers N, M, R, and C.
+
+Output Specification
+If it is impossible to design a poster that will satisfy both Ryo and Kita, output IMPOSSIBLE on a single line.
+Otherwise, your output should contain N lines, each consisting of M lowercase English letters, representing your poster design. If there are multiple possible designs, output any of them.
+
+
+Sample Input 1
+4 5 1 2
+Output for Sample Input 1
+union
+radar
+badge
+anime
+Explanation of Output for Sample Input 1
+
+In the given design, only the second row (namely radar) and the second and third columns (namely naan and iddi) are palindromes. Since exactly R = 1 of the rows and C = 2 of the columns are palindromes, this is an acceptable design.
+
+
+Sample Input 2
+2 2 2 1
+Output for Sample Input 2
+IMPOSSIBLE
+Explanation of Output for Sample Input 2
+In this case, it can be proven that it is impossible to satisfy both Ryo and Kita.
+
+'''
 from copy import deepcopy as cp
 from os import system
 
@@ -118,3 +152,52 @@ def dfs(grid:Grid):
     
 dfs(grid)
 print(ans)
+
+
+
+'''
+answer from gpt
+
+这是一个简单的构造题，可以使用贪心策略。我们需要构造一个 N * M 的矩阵，使得恰好有 R 行是回文串，且恰好有 C 列是回文串。
+
+思路如下：
+
+如果 R * C > N 或者 R * C > M，那么无论怎样构造都不可能满足条件，此时输出'IMPOSSIBLE'即可。
+
+否则，我们可以将矩阵分为两个部分，第一部分是所有行和列的交叉点（即交点）所在的子矩阵，第二部分是剩余的部分，也就是除去第一部分的所有行或列组成的子矩阵，这部分的大小为 (N - R) * (M - C)。
+
+我们先考虑如何构造第一部分。设 K = min(R, C)，那么我们可以将矩阵划分为 K 个子矩阵，每个子矩阵恰好含有一个回文行和一个回文列。具体地，我们可以让这个子矩阵的第 i 行和第 i 列是相同的回文串（比如说 aa）。对于其他的交点，我们可以随意填充 lowercase English letters 中的任何字母，以保证该交点不是一个回文点。
+
+考虑到第一部分已经有了恰好 R 行和 C 列是回文串，为了满足要求，我们只需要在第二部分找到剩下的 R - K 行和 C - K 列，让它们各自是一个回文串即可。 如果此时无 SOLUTION，则输出'IMPOSSIBLE'。
+
+时间复杂度为 O(NM)O(NM)。
+
+
+n, m, r, c = map(int, input().split())
+if r*c > n*m:
+    print('IMPOSSIBLE')
+else:
+    # 构造第一部分子矩阵
+    row = min(n, r)
+    col = min(m, c)
+    grid = [[''] * col for _ in range(row)]
+    for i in range(min(row, col)):
+        grid[i][i] = 'a'
+    for i in range(row):
+        for j in range(col):
+            if grid[i][j] == '':
+                grid[i][j] = 'b'
+    
+    # 构造第二部分子矩阵
+    for i in range(row, n):
+        for j in range(m):
+            grid[i][j] = 'c'
+    for i in range(n):
+        for j in range(col, m):
+            if grid[i][j] == '':
+                grid[i][j] = 'd'
+
+    # 输出结果
+    for i in range(n):
+        print(''.join(grid[i]))
+'''
