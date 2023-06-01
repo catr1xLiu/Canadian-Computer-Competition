@@ -40,18 +40,18 @@ from os import system
 
 class Grid:
     nums = []  # nums[row][colum]
-    colums_asymmetry = []  # 1 for not symmetric
+    columns_asymmetry = []  # 1 for not symmetric
     rows_asymmetry = []
 
     def __init__(self, n, m):  # n and m is the number of rows and colums
         self.nums = [[0 for i in range(m)] for j in range(n)]
-        self.colums_asymmetry = [0 for i in range(m)]
+        self.columns_asymmetry = [0 for i in range(m)]
         self.rows_asymmetry = [0 for i in range(n)]
 
     def update(self, row, col, value):
         self.nums[row][col] = value
         row_asymmetry = 0
-        for i in range(int(len(self.colums_asymmetry) / 2)):
+        for i in range(int(len(self.columns_asymmetry) / 2)):
             if self.nums[row][i] != self.nums[row][-1 - i]:
                 row_asymmetry = 1
                 break
@@ -62,7 +62,7 @@ class Grid:
             if self.nums[i][col] != self.nums[-1 - i][col]:
                 col_asymmetry = 1
                 break
-        self.colums_asymmetry[col] = col_asymmetry
+        self.columns_asymmetry[col] = col_asymmetry
 
     def equals(self, grid):
         for i in range(len(self.rows_asymmetry)):
@@ -77,9 +77,9 @@ class Grid:
             result += i
         return result
 
-    def get_number_of_asymmetric_colums(self):
+    def get_number_of_asymmetric_columns(self):
         result = 0
-        for i in self.colums_asymmetry:
+        for i in self.columns_asymmetry:
             result += i
         return result
 
@@ -87,14 +87,14 @@ class Grid:
         copied_self = Grid(n, m)
         copied_self.nums = cp(self.nums)
         copied_self.rows_asymmetry = cp(self.rows_asymmetry)
-        copied_self.colums_asymmetry = cp(self.colums_asymmetry)
+        copied_self.columns_asymmetry = cp(self.columns_asymmetry)
         return copied_self
 
     def __str__(self):
         alphabet = "abcdefghijklmnopqrstuvwxyz"
         string = ""
         for i in range(len(self.rows_asymmetry)):
-            for j in range(len(self.colums_asymmetry)):
+            for j in range(len(self.columns_asymmetry)):
                 string += alphabet[self.nums[i][j]]
             string += "\n"
         return string
@@ -115,7 +115,7 @@ path = set()
 
 def dfs(grid: Grid):
     global found, ans
-    if grid.get_number_of_asymmetric_rows() == r and grid.get_number_of_asymmetric_colums() == c:
+    if grid.get_number_of_asymmetric_rows() == r and grid.get_number_of_asymmetric_columns() == c:
         ans = grid
         found = True
         return
@@ -126,7 +126,7 @@ def dfs(grid: Grid):
     # go through all the options we can do
     options_both_closing = []  # the options that can make the grid have both r and c closer to the targeted
     options_rows_closing = []  # the options that can make the amount of asymmetric rows approaching the objective quantity
-    options_colums_closing = []  # the options for colums
+    options_columns_closing = []  # the options for columns
     # TODO better sort all the options of best to worse in the order of how good it is leading to the required r and c
     for i in range(n):
         for j in range(m):
@@ -134,25 +134,26 @@ def dfs(grid: Grid):
             if option.nums[i][j] + 1 >= 3:
                 continue
             option.update(i, j, option.nums[i][j] + 1)
-            if (option.get_number_of_asymmetric_rows(), option.get_number_of_asymmetric_colums()) in path:
+            if (option.get_number_of_asymmetric_rows(), option.get_number_of_asymmetric_columns()) in path:
                 continue
-            path.add((option.get_number_of_asymmetric_rows(), option.get_number_of_asymmetric_colums()))
+            path.add((option.get_number_of_asymmetric_rows(), option.get_number_of_asymmetric_columns()))
             rows_closing = (option.get_number_of_asymmetric_rows() - grid.get_number_of_asymmetric_rows()) * (
-                        r - grid.get_number_of_asymmetric_rows()) > 0  # if we are moving in the right direction in the matter of the amount of asymmetric rpws required
-            colums_closing = (option.get_number_of_asymmetric_colums() - grid.get_number_of_asymmetric_colums()) * (
-                        c - grid.get_number_of_asymmetric_colums()) > 0  # in the matter of colums
-            # print((option.get_number_of_asymmetric_rows(), option.get_number_of_asymmetric_colums(), rows_closing, colums_closing))
+                    r - grid.get_number_of_asymmetric_rows()) > 0  # if we are moving in the right direction in the matter of the amount of asymmetric rpws required
+            columns_closing = (option.get_number_of_asymmetric_columns() - grid.get_number_of_asymmetric_columns()) * (
+                    c - grid.get_number_of_asymmetric_columns()) > 0  # in the matter of columns
+            # print((option.get_number_of_asymmetric_rows(), option.get_number_of_asymmetric_columns(), rows_closing,
+            # columns_closing))
             if rows_closing:
-                if colums_closing:
+                if columns_closing:
                     options_both_closing.append(option)
                 else:
                     options_rows_closing.append(option)
-            elif colums_closing:
-                options_colums_closing.append(option)
+            elif columns_closing:
+                options_columns_closing.append(option)
 
     for option in options_both_closing:
         dfs(option)
-    for option in options_colums_closing:
+    for option in options_columns_closing:
         dfs(option)
     for option in options_rows_closing:
         dfs(option)
@@ -273,3 +274,7 @@ create_palindrome_poster(N, M, R, C)
 
 You can now run the program and provide the input to get the desired output.
 '''
+
+# second attempt
+
+
