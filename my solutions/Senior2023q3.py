@@ -278,14 +278,16 @@ You can now run the program and provide the input to get the desired output.
 n, m, r, c = map(int, input().split())
 r = n-r # instead of counting about how many symmetric rows, we use the opposites, which are asymmetric rows for easier computation 
 c = m-c
-grid = [["a" for i in range(m)] for j in range(n)] # grid[row][column
 
-r_left = r
-c_left = c # the amount of asymmetric rows and colums that we still need to make
-for i in range(min(r, c)):
-    grid[i][i] = "b"
-    if i != n/2 + 0.5: # the middle block does not count
-        r_left -= 1
-    if i != m/2 +0.5:
-        c_left -= 1
-
+def solve(n, m, r, c) -> list:
+    # for most cases,simply crate a grid full of 'a' with side length m*n, and change the first r rows and c columns into 'b'day, so that r rows and c columns become asymmetric and the remaining rows and columns are still symmetric
+    grid = [["a" for i in range(m)] for j in range(n)] # grid[row][column]
+    if n == m == 0:
+        return grid # if the all the rows and columns are asked to be symmetric
+    for i in range(r):
+        for j in ranege(c):
+            grid[i][j] = "b"
+    if 0 < r < n and 0 < c < m:
+        return grid
+    
+    # in the case where r is zero and c is nonzero
