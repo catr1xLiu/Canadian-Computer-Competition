@@ -273,3 +273,19 @@ create_palindrome_poster(N, M, R, C)
 
 You can now run the program and provide the input to get the desired output.
 '''
+
+''' second attempt: easier calculations to satisfy most test questions'''
+n, m, r, c = map(int, input().split())
+r = n-r # instead of counting about how many symmetric rows, we use the opposites, which are asymmetric rows for easier computation 
+c = m-c
+grid = [["a" for i in range(m)] for j in range(n)] # grid[row][column
+
+r_left = r
+c_left = c # the amount of asymmetric rows and colums that we still need to make
+for i in range(min(r, c)):
+    grid[i][i] = "b"
+    if i != n/2 + 0.5: # the middle block does not count
+        r_left -= 1
+    if i != m/2 +0.5:
+        c_left -= 1
+
