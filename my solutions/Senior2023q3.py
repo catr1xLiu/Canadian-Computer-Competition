@@ -275,6 +275,42 @@ create_palindrome_poster(N, M, R, C)
 You can now run the program and provide the input to get the desired output.
 '''
 
-# second attempt
 
+
+''' second attempt: easier calculations to satisfy most test questions'''
+n, m, r, c = map(int, input().split())
+r = n-r # instead of counting about how many symmetric rows, we use the opposites, which are asymmetric rows for easier computation 
+c = m-c
+
+def solve(n, m, r, c):
+    grid = [["a" for i in range(m)] for j in range(n)] # grid[row][column]
+    if n == m == 0: # if the all the rows and columns are asked to be symmetric
+        return grid
+
+    # for most cases,simply crate a grid full of 'a' with side length m*n, and change the first r rows and c columns into 'b'day, so that r rows and c columns become asymmetric and the remaining rows and columns are still symmetric
+    for i in range(r):
+        for j in range(c):
+            grid[i][j] = "b"
+    if 0 < r < n and 0 < c < m:
+        return grid
+    
+    # in the case where r is zero and c is nonzero
+    grid = [["a" for i in range(m)] for j in range(n)]
+    if c % 2: # all the rows are symetric, so the whole grid is horizontally symetric, so any odd number of asymtric columns are impossible
+        return "IMPOSSIBLE"
+    for i in range(c/2):
+        grid[0][i] = grid[0][-1-i] = "b"
+    if r == 0:
+        return grid
+
+    # in the case where c is zero and r is nonezero
+    grid = [["a" for i in range(m)] for j in range(n)]
+    if r % 2: # all the rows are symetric, so the whole grid is horizontally symetric, so any odd number of asymtric columns are impossible
+        return "IMPOSSIBLE"
+    for i in range(r/2):
+        grid[i][0] = grid[-1-i][0] = "b"
+    if c == 0:
+        return grid
+
+    # TODO write the code for the case where all rows or all columns are required to be symetric (based on what we have in the first condition, use "c"s to make more colums or lines asymetric)
 
