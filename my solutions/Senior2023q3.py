@@ -100,12 +100,12 @@ class Grid:
         return string
 
 
-n, m, r, c = input().split()
+'''n, m, r, c = input().split()
 n = int(n)
 m = int(m)
 r = n - int(r)
 c = m - int(c)
-grid = Grid(n, m)
+grid = Grid(n, m)'''
 
 ans = "IMPOSSIBLE"
 found = False
@@ -159,8 +159,8 @@ def dfs(grid: Grid):
         dfs(option)
 
 
-dfs(grid)
-print(ans)
+'''dfs(grid)
+print(ans)'''
 
 '''
 answer from gpt
@@ -297,7 +297,7 @@ def solve(n, m, r, c):
     grid = [["a" for i in range(m)] for j in range(n)]
     if c % 2: # all the rows are symetric, so the whole grid is horizontally symetric, so any odd number of asymtric columns are impossible
         return "IMPOSSIBLE"
-    for i in range(c/2):
+    for i in range(int(c/2)):
         grid[0][i] = grid[0][-1-i] = "b"
     if r == 0:
         return grid
@@ -306,7 +306,7 @@ def solve(n, m, r, c):
     grid = [["a" for i in range(m)] for j in range(n)]
     if r % 2: # all the rows are symetric, so the whole grid is horizontally symetric, so any odd number of asymtric columns are impossible
         return "IMPOSSIBLE"
-    for i in range(r/2):
+    for i in range(int(r/2)):
         grid[i][0] = grid[-1-i][0] = "b"
     if c == 0:
         return grid
@@ -317,7 +317,7 @@ def solve(n, m, r, c):
         for j in range(c):
             grid[i][j] = "b"
     grid[r-1][0]="c" # to make the one last row asymmetric
-    if r == n:
+    if r == n and c!= m:
         return grid
     
     grid = [["a" for i in range(m)] for j in range(n)]
@@ -325,7 +325,7 @@ def solve(n, m, r, c):
         for j in range(c-1):
             grid[i][j] = "b"
     grid[0][c-1]="c" # to make the last column asymmetric
-    if c == m:
+    if c == m and r != n:
         return grid
     
     grid = [["a" for i in range(m)] for j in range(n)]
