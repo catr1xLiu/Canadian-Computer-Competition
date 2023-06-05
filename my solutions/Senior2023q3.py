@@ -276,8 +276,7 @@ You can now run the program and provide the input to get the desired output.
 '''
 
 
-
-''' second attempt: easier calculations to satisfy most test questions'''
+''' second attempt: smarter generation strategies'''
 n, m, r, c = map(int, input().split())
 r = n-r # instead of counting about how many symmetric rows, we use the opposites, which are asymmetric rows for easier computation 
 c = m-c
@@ -312,5 +311,35 @@ def solve(n, m, r, c):
     if c == 0:
         return grid
 
-    # TODO write the code for the case where all rows or all columns are required to be symetric (based on what we have in the first condition, use "c"s to make more colums or lines asymetric)
+    # for the case where all rows or all columns are required to be symetric (based on what we have in the first condition, use "c"s to make more colums or lines asymetric)
+    grid = [["a" for i in range(m)] for j in range(n)]
+    for i in range(r-1):
+        for j in range(c):
+            grid[i][j] = "b"
+    grid[r-1][0]="c" # to make the one last row asymmetric
+    if r == n:
+        return grid
+    
+    grid = [["a" for i in range(m)] for j in range(n)]
+    for i in range(r):
+        for j in range(c-1):
+            grid[i][j] = "b"
+    grid[0][c-1]="c" # to make the last column asymmetric
+    if c == m:
+        return grid
+    
+    grid = [["a" for i in range(m)] for j in range(n)]
+    # for the case where all columns and rows are asymmetric
+    for i in range(r-1):
+        for j in range(c-1):
+            grid[i][j] = "b"
+    grid[-1][-1] = "c"
+    if r == n and c == m:
+        return grid
+    return "IMPOSSIBLE"
 
+ans = solve(n, m, r, c)
+for i in ans:
+    for j in i:
+        print(j, end=" ")
+    print("\n")
