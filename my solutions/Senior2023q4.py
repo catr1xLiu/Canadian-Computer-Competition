@@ -51,7 +51,7 @@ class Road: # stores a single road
 class Plan: # stores a path to get from one intersection to another
     def __init__(self, start):
         self.start = start
-        self.end = -1
+        self.end = start
         self.distance = 0
         self.cost = 0
         self.path = []
@@ -68,18 +68,33 @@ class Plan: # stores a path to get from one intersection to another
 
 # solution for 2023 question 4
 amount_of_intersects, amount_of_roads = map(int, input().split())
-roads = [[] for i in range(
-    amount_of_intersects)]  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
+roads = [[] for i in range(amount_of_intersects)]  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
 for i in range(amount_of_roads):
     u, v, cost, length = map(int, input().split())
-    start = min(u, v)  # always consider the smaller intersection as it's starting point
-    end = max(u, v)
-    road = (end, cost, length)
-    roads[start].append(road)
+    road = Road(u, v, cost, length)
+    roads[road.start].append(road)
 
 answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
 # in the form of {(start, end):[plan1, plan2, plan3]
-# each plan is defined as ([road1, road2, ....], distance)
 
-''' find all possible plans that have minimum distance in order to connect point "from" and "to" '''
-def minimum_distance_plans
+''' find all possible plans that have minimum distance in order to connect point "start" and "end" '''
+def minimum_distance_plans(start:int, end:int) -> list[Plan]:
+    global answers
+
+    # use found answers
+    try:
+        return answers[(start, end)]
+    except KeyError:
+        pass
+    
+    # if we reached the desteny
+    if end == start:
+        return [Plan(end)] # an empty plan
+    
+    # if we went over
+    if start > end:
+        return [] # all roads are stored in the way such that intersection points with smaller id are stored as starting points, making no backward movements are possible, so no plans will work
+
+    for road in roads[start]:
+        # TODO finish the rest
+
