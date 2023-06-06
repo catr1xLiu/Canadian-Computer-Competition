@@ -32,17 +32,33 @@ Additionally, the roads that are part of the plan are highlighted in blue, with 
 It can be shown that we cannot create a cheaper plan that also respects the city’s requirements.
 '''
 
+
+class Road:
+    def __init__(self, start, end, length, cost):
+        self.start = min(start, end)
+        self.end = max(start, end)  # always take the intersection with smaller id as the starting point
+        self.cost = cost
+        self.length = length
+
+    def __str__(self):
+        return "road, from" + str(start) + "to" + str(end) + ", distance:" + str(length) + ", cost:" + str(cost)
+
+
+
+
 # solution for 2023 question 4
 amount_of_intersects, amount_of_roads = map(int, input().split())
-roads = [[] for i in range(amount_of_intersects)] # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
+roads = [[] for i in range(
+    amount_of_intersects)]  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
 for i in range(amount_of_roads):
-  u, v, cost, length = map(int, input().split())
-  start = min(u, v) # always consider the smaller intersection as it's starting point
-  end = max(u, v)
-  road = (end, cost, length)
-  roads[start].append(road)
-  
-answers = {} # stote the founs answers to the minimum distance plans to go from one intersection to another, in the form of {(start, end):[plan1, plan2, plan3]
+    u, v, cost, length = map(int, input().split())
+    start = min(u, v)  # always consider the smaller intersection as it's starting point
+    end = max(u, v)
+    road = (end, cost, length)
+    roads[start].append(road)
+
+answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
+# in the form of {(start, end):[plan1, plan2, plan3]
 # each plan is defined as ([road1, road2, ....], distance)
 
 '''  '''
