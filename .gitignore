@@ -4,3 +4,5 @@ my solutions/.vs/ProjectSettings.json
 my solutions/.vs/my solutions/FileContentIndex/read.lock
 my solutions/.vs/my solutions/FileContentIndex/d3bb10b5-e47e-4e16-8b21-27a4860023e5.vsidx
 *.vsidx
+*.json
+my solutions/.vs/my solutions/v17/.wsuo

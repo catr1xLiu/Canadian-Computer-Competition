@@ -64,6 +64,20 @@ class Plan: # stores a path to get from one intersection to another
         self.distance += road.length
         self.cost += road.cost
         self.path.append(road)
+    
+    def connectPlan(self, plan:Plan): # to connect to another plan
+        if self.end == plan.start:
+            return
+        self.path += plan.path
+        self.cost += plan.cost
+        self.distance += plan.distance
+        self.end = plan.end
+        
+    def getCopy(self): # create a copy of current plan
+        copy = Plan(self.start)
+        for road in self.roads:
+            copy.connectRoad(road)
+        return copy
 
 
 # solution for 2023 question 4
@@ -89,12 +103,18 @@ def minimum_distance_plans(start:int, end:int) -> list[Plan]:
     
     # if we reached the desteny
     if end == start:
-        return [Plan(end)] # an empty plan
+        return [Plan(end)] # an empty plan with no roads
     
     # if we went over
     if start > end:
         return [] # all roads are stored in the way such that intersection points with smaller id are stored as starting points, making no backward movements are possible, so no plans will work
 
-    for road in roads[start]:
-        # TODO finish the rest
-
+    for road in roads[start]: # go through all the roads that connect the current intersection and farther points
+        current_plan = Plan(start)
+        current_plan.connectRoad(road)
+        min_distance = float("inf")
+        
+        plans_from_road_ending = 
+        for plan in minimum_distance_plans(road.end, end):
+            combined_plan = current_plan.getCopy()
+            combined_plan.con
