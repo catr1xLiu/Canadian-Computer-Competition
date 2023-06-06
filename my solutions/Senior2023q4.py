@@ -33,7 +33,11 @@ It can be shown that we cannot create a cheaper plan that also respects the city
 '''
 
 
-class Road:
+from turtle import distance
+from urllib import robotparser
+
+
+class Road: # stores a single road
     def __init__(self, start, end, length, cost):
         self.start = min(start, end)
         self.end = max(start, end)  # always take the intersection with smaller id as the starting point
@@ -41,9 +45,25 @@ class Road:
         self.length = length
 
     def __str__(self):
-        return "road, from" + str(start) + "to" + str(end) + ", distance:" + str(length) + ", cost:" + str(cost)
+        return "road, from" + str(self.start) + "to" + str(self.end) + ", distance:" + str(self.length) + ", cost:" + str(self.cost)
 
 
+class Plan: # stores a path to get from one intersection to another
+    def __init__(self, start):
+        self.start = start
+        self.end = -1
+        self.distance = 0
+        self.cost = 0
+        self.path = []
+
+    def __str__(self):
+        return "path that connects:" + str(self.start) + "and" + str(self.end) + ", with total distance:" + str(self.distance) + " and total cost:" + str(self.cost) + ". Connected roads:" + str(self.path)
+
+    def connectRoad(self, road:Road): # connect a road to the end of the path, and update all the datas
+        self.end = road.end
+        self.distance += road.length
+        self.cost += road.cost
+        self.path.append(road)
 
 
 # solution for 2023 question 4
@@ -61,4 +81,5 @@ answers = {}  # store the found answers to the minimum distance plans to go from
 # in the form of {(start, end):[plan1, plan2, plan3]
 # each plan is defined as ([road1, road2, ....], distance)
 
-'''  '''
+''' find all possible plans that have minimum distance in order to connect point "from" and "to" '''
+def minimum_distance_plans
