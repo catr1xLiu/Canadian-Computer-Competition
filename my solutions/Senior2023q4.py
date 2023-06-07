@@ -110,7 +110,6 @@ def minimum_distance_plans(start:int, end:int) -> list:
         return answers[(start, end)]
     except KeyError:
         pass
-    print(start, end)
     
     # if we reached the desteny
     if end == start:
@@ -139,8 +138,6 @@ def minimum_distance_plans(start:int, end:int) -> list:
     answers[(start, end)] = min_distance_options 
     return min_distance_options
 
-
-
 # according to all the choices that can achieve minimum distance, find the combination if choices where the cost is lowest
 
 '''
@@ -152,11 +149,12 @@ all the frontward connection between every two intersections:
 ]
 '''
 plans_for_all_connections = []
-for start in range(amount_of_intersects):
+for start in range(amount_of_intersects-1):
     for end in range(start+1, amount_of_intersects):
         plans_for_all_connections.append(minimum_distance_plans(start, end))
+        print(start, end, minimum_distance_plans(start, end))
 
-print(plans_for_all_connections)
+print(answers)
 
 def find_total_cost(plans: list) -> int: # find the total cost of a set of plans if they are aplied at the sametime, note that roads may repeat and they shouldn't be counted twice
     roads = set()
@@ -171,13 +169,13 @@ def find_total_cost(plans: list) -> int: # find the total cost of a set of plans
 min_cost = float("inf")
 def dfs(connection_count:int, choices:list):
     global min_cost
-    print(connection_count, choices)
     if connection_count == len(plans_for_all_connections)-1:
         min_cost = min(min_cost, find_total_cost(choices))
-        print(find_total_cost(choices))
+        # print(find_total_cost(choices))
         return
     for plan in plans_for_all_connections[connection_count]:
         dfs(connection_count+1, cp(choices) + [plan])
+
 
 dfs(0, [])
 print(min_cost)
