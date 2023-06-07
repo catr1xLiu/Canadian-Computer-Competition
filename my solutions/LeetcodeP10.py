@@ -41,6 +41,30 @@ so if we set diff = len(s) - len(p) - (the amount of *),
 the total elements that * represents will be diff, and for countable amount of *, there is countable amount of ways to allocate these elements
 we just need to try all of these ways and see if there is one way that can match
 '''
+
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
-   
+        stars_count = 0
+        for i in p:
+            stars_count += int(i=="*")
+        amount_of_elements_by_star = len(s) - (len(p) - stars_count)
+        
+        def equals(s, p):
+            if len(s) != len(p):
+                return False
+            for i in range(len(s)):
+                if s[i] == p[i] or p[i] == ".":
+                    continue
+                return False
+            return True
+        
+        if equals(s, p):
+            return True
+        
+        ans = False
+        sperarated_list = p.split("*")
+        def dfs(star_num, elements_by_star_count, string):
+            # TODO finish the rest
+        
+
+
