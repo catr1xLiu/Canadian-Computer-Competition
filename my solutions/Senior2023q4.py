@@ -153,7 +153,7 @@ all the frontward connection between every two intersections:
 '''
 plans_for_all_connections = []
 for start in range(amount_of_intersects):
-    for end in range(start, amount_of_intersects):
+    for end in range(start+1, amount_of_intersects):
         plans_for_all_connections.append(minimum_distance_plans(start, end))
 
 print(plans_for_all_connections)
@@ -178,8 +178,6 @@ def dfs(connection_count:int, choices:list):
         return
     for plan in plans_for_all_connections[connection_count]:
         dfs(connection_count+1, cp(choices) + [plan])
-    if len(plans_for_all_connections[connection_count]) == 0:
-        dfs(connection_count+1, cp(choices))
 
 dfs(0, [])
 print(min_cost)
