@@ -60,7 +60,14 @@ class Plan: # stores a path to get from one intersection to another
         return "path that connects:" + str(self.start) + "and" + str(self.end) + ", with total distance:" + str(self.distance) + " and total cost:" + str(self.cost) + ". Connected roads:" + path_string
 
     def connectRoad(self, road:Road): # connect a road to the end of the path, and update all the datas
-        self.end = road.end
+        if self.start == road.start:
+            # if the road is connected normally
+            self.end = road.end
+        elif self.start == road.end: 
+            # if the road is connected reversely
+            self.end = road.start
+        else:
+            return
         self.distance += road.length
         self.cost += road.cost
         self.path.append(road)
@@ -82,11 +89,11 @@ class Plan: # stores a path to get from one intersection to another
 
 # solution for 2023 question 4
 amount_of_intersects, amount_of_roads = map(int, input().split())
-roads = [[] for i in range(amount_of_intersects)]  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
+roads = []  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
 for i in range(amount_of_roads):
     u, v, cost, length = map(int, input().split())
     road = Road(u-1, v-1, cost, length)
-    roads[road.start].append(road)
+    roads.append(road)
     
 
 '''amount_of_intersects, amount_of_roads = 5,7
@@ -101,8 +108,8 @@ roads = [
 answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
 # in the form of {(start, end):[plan1, plan2, plan3]
 
-''' find all possible plans that have minimum distance in order to connect point "start" and "end" '''
-def minimum_distance_plans(start:int, end:int) -> list:
+''' find all possible plans that have minimum distance in order to connect point "start" and "end", we do not reuse any roads by skipping any roads in "used_roads" '''
+def minimum_distance_plans(start:int, end:int, intersects_been_to:list = []) -> list:
     global answers
 
     # use found answers
@@ -114,17 +121,18 @@ def minimum_distance_plans(start:int, end:int) -> list:
     # if we reached the desteny
     if end == start:
         return [Plan(end)] # an empty plan with no roads
-    
-    # if we went over
-    if start > end:
-        return [] # all roads are stored in the way such that intersection points with smaller id are stored as starting points, making no backward movements are possible, so no plans will work
 
     min_distance = float("inf")
     min_distance_options = []
-    for road in roads[start]: # go through all the roads that connect the current intersection and farther points
+    for road in roads: # go through all the roads that connect the current intersection and farther points
+        if road.start != start and road.end != start: # if the road is unrelated
+            continue
+
         current_plan = Plan(start)
         current_plan.connectRoad(road)
-        plans_from_road_ending = minimum_distance_plans(road.end, end)
+        if current_plan.end in intersects_been_to:
+            continue # never go through intersects that we've been to since that will lead to dead loops
+        plans_from_road_ending = minimum_distance_plans(current_plan.end, end, cp(intersects_been_to) + [current_plan.end])
         
         for plan in plans_from_road_ending:
             combined_plan = current_plan.getCopy()
@@ -137,6 +145,7 @@ def minimum_distance_plans(start:int, end:int) -> list:
     
     answers[(start, end)] = min_distance_options 
     return min_distance_options
+print(minimum_distance_plans(1,2)[0])
 
 # according to all the choices that can achieve minimum distance, find the combination if choices where the cost is lowest
 
@@ -154,7 +163,6 @@ for start in range(amount_of_intersects-1):
         plans_for_all_connections.append(minimum_distance_plans(start, end))
         print(start, end, minimum_distance_plans(start, end))
 
-print(answers)
 
 def find_total_cost(plans: list) -> int: # find the total cost of a set of plans if they are aplied at the sametime, note that roads may repeat and they shouldn't be counted twice
     roads = set()
