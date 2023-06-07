@@ -32,6 +32,8 @@ Additionally, the roads that are part of the plan are highlighted in blue, with 
 It can be shown that we cannot create a cheaper plan that also respects the city’s requirements.
 '''
 
+from copy import deepcopy as cp
+
 class Road: # stores a single road
     def __init__(self, start, end, length, cost):
         self.start = min(start, end)
@@ -79,21 +81,22 @@ class Plan: # stores a path to get from one intersection to another
 
 
 # solution for 2023 question 4
-'''amount_of_intersects, amount_of_roads = map(int, input().split())
+amount_of_intersects, amount_of_roads = map(int, input().split())
 roads = [[] for i in range(amount_of_intersects)]  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
 for i in range(amount_of_roads):
     u, v, cost, length = map(int, input().split())
-    road = Road(u, v, cost, length)
-    roads[road.start].append(road)'''
+    road = Road(u-1, v-1, cost, length)
+    roads[road.start].append(road)
     
-amount_of_intersects, amount_of_roads = 5,7
+
+'''amount_of_intersects, amount_of_roads = 5,7
 roads = [
     [Road(0, 1, 15, 1), Road(0, 2, 2, 7), Road(0, 3, 2, 1)],
     [Road(1, 3, 9, 9), Road(1, 4, 5, 6)],
     [Road(2, 3, 3, 7)],
     [Road(3, 4, 4, 4)],
     []
-]
+]'''
 
 answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
 # in the form of {(start, end):[plan1, plan2, plan3]
@@ -136,6 +139,45 @@ def minimum_distance_plans(start:int, end:int) -> list:
     answers[(start, end)] = min_distance_options 
     return min_distance_options
 
-print(minimum_distance_plans(0,4)[0])
-print(answers)
+
+
 # according to all the choices that can achieve minimum distance, find the combination if choices where the cost is lowest
+
+'''
+all the frontward connection between every two intersections:
+[
+    [plan1, plan2, plan3], # the plans to connect the first pair of intersections
+    [plan1], # the plans to connect the second pair of intersections
+    [plan1, plan2], # the plans to connect the third pair of intersections
+]
+'''
+plans_for_all_connections = []
+for start in range(amount_of_intersects):
+    for end in range(start, amount_of_intersects):
+        plans_for_all_connections.append(minimum_distance_plans(start, end))
+
+print(len(plans_for_all_connections))
+
+def find_total_cost(plans: list) -> int: # find the total cost of a set of plans if they are aplied at the sametime, note that roads may repeat and they shouldn't be counted twice
+    roads = set()
+    for plan in plans:
+        for road in plan.path:
+            roads.add(road) # the road objects are all created during input, so they won't repreat in the set
+    total_cost = 0
+    for road in list(roads):
+        total_cost  += road.cost
+    return total_cost
+
+min_cost = float("inf")
+def dfs(connection_count:int, choices:list):
+    global min_cost
+    print(connection_count, choices)
+    if connection_count == len(plans_for_all_connections)-1:
+        min_cost = min(min_cost, find_total_cost(choices))
+        print(find_total_cost(choices))
+        return
+    for plan in plans_for_all_connections[connection_count]:
+        dfs(connection_count+1, cp(choices) + [plan])
+
+dfs(0, [])
+print(min_cost)
