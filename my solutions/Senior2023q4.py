@@ -89,10 +89,10 @@ for i in range(amount_of_roads):
 amount_of_intersects, amount_of_roads = 5,7
 roads = [
     [Road(0, 1, 15, 1), Road(0, 2, 2, 7), Road(0, 3, 2, 1)],
-    [Road(1, 3, 9, 9)],
-    [],
-    [Road(3, 4, 4, 4), Road(3, 2, 3, 7)],
-    [Road(4, 1, 5, 6)]
+    [Road(1, 3, 9, 9), Road(1, 4, 5, 6)],
+    [Road(2, 3, 3, 7)],
+    [Road(3, 4, 4, 4)],
+    []
 ]
 
 answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
@@ -117,13 +117,13 @@ def minimum_distance_plans(start:int, end:int) -> list:
     if start > end:
         return [] # all roads are stored in the way such that intersection points with smaller id are stored as starting points, making no backward movements are possible, so no plans will work
 
+    min_distance = float("inf")
+    min_distance_options = []
     for road in roads[start]: # go through all the roads that connect the current intersection and farther points
         current_plan = Plan(start)
         current_plan.connectRoad(road)
-        min_distance = float("inf")
-        
         plans_from_road_ending = minimum_distance_plans(road.end, end)
-        min_distance_options = []
+        
         for plan in plans_from_road_ending:
             combined_plan = current_plan.getCopy()
             combined_plan.connectPlan(plan)
@@ -132,8 +132,9 @@ def minimum_distance_plans(start:int, end:int) -> list:
                 min_distance_options = []
             if combined_plan.distance == min_distance:
                 min_distance_options.append(combined_plan)
-        answers[(start, end)] = min_distance_options
-        return min_distance_options
+    
+    answers[(start, end)] = min_distance_options 
+    return min_distance_options
 
 print(minimum_distance_plans(0,4)[0])
 print(answers)
