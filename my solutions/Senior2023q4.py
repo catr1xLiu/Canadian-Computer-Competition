@@ -32,11 +32,6 @@ Additionally, the roads that are part of the plan are highlighted in blue, with 
 It can be shown that we cannot create a cheaper plan that also respects the city’s requirements.
 '''
 
-
-from turtle import distance
-from urllib import robotparser
-
-
 class Road: # stores a single road
     def __init__(self, start, end, length, cost):
         self.start = min(start, end)
@@ -57,7 +52,10 @@ class Plan: # stores a path to get from one intersection to another
         self.path = []
 
     def __str__(self):
-        return "path that connects:" + str(self.start) + "and" + str(self.end) + ", with total distance:" + str(self.distance) + " and total cost:" + str(self.cost) + ". Connected roads:" + str(self.path)
+        path_string = ""
+        for road in self.path:
+            path_string += str(road) + ','
+        return "path that connects:" + str(self.start) + "and" + str(self.end) + ", with total distance:" + str(self.distance) + " and total cost:" + str(self.cost) + ". Connected roads:" + path_string
 
     def connectRoad(self, road:Road): # connect a road to the end of the path, and update all the datas
         self.end = road.end
@@ -65,8 +63,8 @@ class Plan: # stores a path to get from one intersection to another
         self.cost += road.cost
         self.path.append(road)
     
-    def connectPlan(self, plan:Plan): # to connect to another plan
-        if self.end == plan.start:
+    def connectPlan(self, plan): # to connect to another plan
+        if self.end != plan.start:
             return
         self.path += plan.path
         self.cost += plan.cost
@@ -75,24 +73,33 @@ class Plan: # stores a path to get from one intersection to another
         
     def getCopy(self): # create a copy of current plan
         copy = Plan(self.start)
-        for road in self.roads:
+        for road in self.path:
             copy.connectRoad(road)
         return copy
 
 
 # solution for 2023 question 4
-amount_of_intersects, amount_of_roads = map(int, input().split())
+'''amount_of_intersects, amount_of_roads = map(int, input().split())
 roads = [[] for i in range(amount_of_intersects)]  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
 for i in range(amount_of_roads):
     u, v, cost, length = map(int, input().split())
     road = Road(u, v, cost, length)
-    roads[road.start].append(road)
+    roads[road.start].append(road)'''
+    
+amount_of_intersects, amount_of_roads = 5,7
+roads = [
+    [Road(0, 1, 15, 1), Road(0, 2, 2, 7), Road(0, 3, 2, 1)],
+    [Road(1, 3, 9, 9)],
+    [],
+    [Road(3, 4, 4, 4), Road(3, 2, 3, 7)],
+    [Road(4, 1, 5, 6)]
+]
 
 answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
 # in the form of {(start, end):[plan1, plan2, plan3]
 
 ''' find all possible plans that have minimum distance in order to connect point "start" and "end" '''
-def minimum_distance_plans(start:int, end:int) -> list[Plan]:
+def minimum_distance_plans(start:int, end:int) -> list:
     global answers
 
     # use found answers
@@ -100,6 +107,7 @@ def minimum_distance_plans(start:int, end:int) -> list[Plan]:
         return answers[(start, end)]
     except KeyError:
         pass
+    print(start, end)
     
     # if we reached the desteny
     if end == start:
@@ -114,7 +122,19 @@ def minimum_distance_plans(start:int, end:int) -> list[Plan]:
         current_plan.connectRoad(road)
         min_distance = float("inf")
         
-        plans_from_road_ending = 
-        for plan in minimum_distance_plans(road.end, end):
+        plans_from_road_ending = minimum_distance_plans(road.end, end)
+        min_distance_options = []
+        for plan in plans_from_road_ending:
             combined_plan = current_plan.getCopy()
-            combined_plan.con
+            combined_plan.connectPlan(plan)
+            if combined_plan.distance < min_distance:
+                min_distance = combined_plan.distance
+                min_distance_options = []
+            if combined_plan.distance == min_distance:
+                min_distance_options.append(combined_plan)
+        answers[(start, end)] = min_distance_options
+        return min_distance_options
+
+print(minimum_distance_plans(0,4)[0])
+print(answers)
+# according to all the choices that can achieve minimum distance, find the combination if choices where the cost is lowest
