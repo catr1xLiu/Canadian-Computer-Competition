@@ -32,6 +32,15 @@
 输出：true
 
 解释：".*" 表示可匹配零个或多个（'*'）任意字符（'.'）。
-
- 
 '''
+
+'''
+My solution:
+dots can represent any amount of the element before it,
+so if we set diff = len(s) - len(p) - (the amount of *),
+the total elements that * represents will be diff, and for countable amount of *, there is countable amount of ways to allocate these elements
+we just need to try all of these ways and see if there is one way that can match
+'''
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+   
