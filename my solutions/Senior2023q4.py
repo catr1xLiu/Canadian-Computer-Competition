@@ -42,7 +42,7 @@ class Road: # stores a single road
         self.length = length
 
     def __str__(self):
-        return "road, from" + str(self.start) + "to" + str(self.end) + ", distance:" + str(self.length) + ", cost:" + str(self.cost)
+        return "road, from" + str(self.start+1) + "to" + str(self.end+1) + ", distance:" + str(self.length) + ", cost:" + str(self.cost)
 
 
 class Plan: # stores a path to get from one intersection to another
@@ -57,7 +57,7 @@ class Plan: # stores a path to get from one intersection to another
         path_string = ""
         for road in self.path:
             path_string += str(road) + ','
-        return "path that connects:" + str(self.start) + "and" + str(self.end) + ", with total distance:" + str(self.distance) + " and total cost:" + str(self.cost) + ". Connected roads:" + path_string
+        return "path that connects:" + str(self.start+1) + "and" + str(self.end+1) + ", with total distance:" + str(self.distance) + " and total cost:" + str(self.cost) + ". Connected roads:" + path_string
 
     def connectRoad(self, road:Road): # connect a road to the end of the path, and update all the datas
         if self.start == road.start:
@@ -88,22 +88,17 @@ class Plan: # stores a path to get from one intersection to another
 
 
 # solution for 2023 question 4
+'''
 amount_of_intersects, amount_of_roads = map(int, input().split())
 roads = []  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
 for i in range(amount_of_roads):
     u, v, cost, length = map(int, input().split())
     road = Road(u-1, v-1, cost, length)
-    roads.append(road)
+    roads.append(road)'''
     
 
-'''amount_of_intersects, amount_of_roads = 5,7
-roads = [
-    [Road(0, 1, 15, 1), Road(0, 2, 2, 7), Road(0, 3, 2, 1)],
-    [Road(1, 3, 9, 9), Road(1, 4, 5, 6)],
-    [Road(2, 3, 3, 7)],
-    [Road(3, 4, 4, 4)],
-    []
-]'''
+amount_of_intersects, amount_of_roads = 5,7
+roads = [Road(0, 1, 15, 1), Road(0, 2, 2, 7), Road(0, 3, 2, 1), Road(1, 3, 9, 9), Road(1, 4, 5, 6),Road(2, 3, 3, 7),Road(3, 4, 4, 4)]
 
 answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
 # in the form of {(start, end):[plan1, plan2, plan3]
@@ -114,7 +109,7 @@ def minimum_distance_plans(start:int, end:int, intersects_been_to:list = []) -> 
 
     # use found answers
     try:
-        return answers[(start, end)]
+        return answers[(start, end, str(intersects_been_to))]
     except KeyError:
         pass
     
@@ -132,7 +127,7 @@ def minimum_distance_plans(start:int, end:int, intersects_been_to:list = []) -> 
         current_plan.connectRoad(road)
         if current_plan.end in intersects_been_to:
             continue # never go through intersects that we've been to since that will lead to dead loops
-        plans_from_road_ending = minimum_distance_plans(current_plan.end, end, cp(intersects_been_to) + [current_plan.end])
+        plans_from_road_ending = minimum_distance_plans(current_plan.end, end, cp(intersects_been_to) + [start])
         
         for plan in plans_from_road_ending:
             combined_plan = current_plan.getCopy()
@@ -143,7 +138,7 @@ def minimum_distance_plans(start:int, end:int, intersects_been_to:list = []) -> 
             if combined_plan.distance == min_distance:
                 min_distance_options.append(combined_plan)
     
-    answers[(start, end)] = min_distance_options 
+    answers[(start, end, str(intersects_been_to))] = min_distance_options 
     return min_distance_options
 
 # according to all the choices that can achieve minimum distance, find the combination if choices where the cost is lowest
@@ -162,6 +157,7 @@ for start in range(amount_of_intersects-1):
         plans_for_all_connections.append(minimum_distance_plans(start, end))
 
 
+
 def contains(roads:list, road:Road):
     for i in roads:
         if i.start == road.start and i.end == road.end and i.cost == road.cost and i.length == road.length:
@@ -178,14 +174,12 @@ def find_total_cost(plans: list) -> int: # find the total cost of a set of plans
     total_cost = 0
     for road in roads:
         total_cost  += road.cost
-        print(road)
-    print(total_cost, "\n\n\n\n")
     return total_cost
 
 min_cost = float("inf")
 def dfs(connection_count:int, choices:list):
     global min_cost
-    if connection_count == len(plans_for_all_connections)-1:
+    if connection_count == len(plans_for_all_connections):
         min_cost = min(min_cost, find_total_cost(choices))
         return
     for plan in plans_for_all_connections[connection_count]:
