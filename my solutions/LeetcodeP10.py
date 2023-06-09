@@ -45,6 +45,7 @@ we just need to try all of these ways and see if there is one way that can match
 from copy import deepcopy as cp
 
 class Solution:
+    ans = False
     def isMatch(self, s: str, p: str) -> bool:
         stars_count = 0
         for i in p:
@@ -62,19 +63,30 @@ class Solution:
         
         if equals(s, p):
             return True
-        
-        ans = False
-        seperated_list = p.split("*")
+
+        separated_list = p.split("*")
+        if separated_list[-1] == "":
+            separated_list.pop(-1)
         def combine(elements_by_star_list) -> str:
             string = ""
-            for i in range(elements_by_star_list):
-                string += seperated_list[i] + seperated_list[i][-1] * elements_by_star_list[i] # repeat the last element
+            for i in range(len(elements_by_star_list)):
+                string += separated_list[i-1] + separated_list[i-1][-1] * elements_by_star_list[i] # repeat the last element
             return string
-        
-        def dfs(star_num, elements_by_star_list):
+
+        def dfs(star_num=0, elements_by_star_list:list=[]):
             if star_num == stars_count:
-                
+                attempt = combine(elements_by_star_list)
+                if p[-1] != ".": # there will be one more part to connect
+                    attempt += separated_list[-1]
+                self.ans = equals(s, attempt) or self.ans
+                return
+
             for elements_by_current in range(amount_of_elements_by_star - sum(elements_by_star_list)):
                 string = combine(cp(elements_by_star_list) + [elements_by_current])
                 if equals(s[0:len(string)], string):
                     dfs(star_num +1, cp(elements_by_star_list) + [elements_by_current])
+        dfs()
+        return self.ans
+
+solution = Solution()
+print(solution.isMatch("ab", ".*"))
