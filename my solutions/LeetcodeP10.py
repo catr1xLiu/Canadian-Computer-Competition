@@ -42,6 +42,8 @@ the total elements that * represents will be diff, and for countable amount of *
 we just need to try all of these ways and see if there is one way that can match
 '''
 
+from copy import deepcopy as cp
+
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
         stars_count = 0
@@ -62,9 +64,17 @@ class Solution:
             return True
         
         ans = False
-        sperarated_list = p.split("*")
-        def dfs(star_num, elements_by_star_count, string):
-            # TODO finish the rest
+        seperated_list = p.split("*")
+        def combine(elements_by_star_list) -> str:
+            string = ""
+            for i in range(elements_by_star_list):
+                string += seperated_list[i] + seperated_list[i][-1] * elements_by_star_list[i] # repeat the last element
+            return string
         
-
-
+        def dfs(star_num, elements_by_star_list):
+            if star_num == stars_count:
+                
+            for elements_by_current in range(amount_of_elements_by_star - sum(elements_by_star_list)):
+                string = combine(cp(elements_by_star_list) + [elements_by_current])
+                if equals(s[0:len(string)], string):
+                    dfs(star_num +1, cp(elements_by_star_list) + [elements_by_current])
