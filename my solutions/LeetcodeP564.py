@@ -23,3 +23,19 @@
 
 class Solution:
     def nearestPalindromic(self, n: str) -> str:
+        if len(n) == 1:
+            if n == 1:
+                return 2
+            return int(n) - 1
+        if len(n)%2==0:
+            first_half = n[0:len(n)/2+1]
+            second_half = ""
+            for i in range(len(first_half)-1, -1,-1):
+                second_half += first_half[i]
+            return second_half + first_half
+        first_half = n[0:int(len(n)/2)]
+        second_half = ""
+        for i in range(len(first_half)-1, -1, -1):
+            second_half += first_half[i]
+        return first_half += n[int(len(n)/2)] + second_half
+        
