@@ -34,20 +34,25 @@ fancy.getIndex(2); // 返回 20
 '''
 
 class Fancy:
+    '''
+    思路：先存下所有加或乘的操作，每次操作叫一步。把append的原始数据存储下来，并存储他们是在哪一步被存下来的。
+    对于任何一个加操作的加数adder，它最终加在一个数上的值等于adder * m1 * m2 * m3 * ...， 其中mi为这个加操作之后所有的乘操作的乘数
+    而对于乘操作，我们可以将多次乘法操作合并，存储下他们取模后的积，当需要把原始输入乘以他后面乘法操作的值时，只需要把这些取模后的合并积乘起来，节省时间
+    '''
     mod_base = 10e9 + 7
     raw_inputs = [] # in the form of [(num1,timeinserted), ....]
     operations = [] # in the form of [(0 for add, adder1), (1 for multiplication, factor 2)]
-
+    combined_factors = [] # in the form of [[from, to, product(moded)], ...]
+    
     def __init__(self):
-        
+        pass
     def append(self, val: int) -> None:
-        raw_inputs.append((val, len(operations)))
+        self.raw_inputs.append((val, len(operations)))
 
     def addAll(self, inc: int) -> None:
-
+        self.operations.append((0, inc))
     def multAll(self, m: int) -> None:
-
-
+        self.operations.append((1,m))
     def getIndex(self, idx: int) -> int:
 
 
