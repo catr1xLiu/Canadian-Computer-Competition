@@ -58,7 +58,7 @@ Sample Output 2
 1 5 3 2 1
 Explanation of Output for Sample Input 2
 The 14 good samples are: (1), (1, 5), (1, 5, 3), (1, 5, 3, 2), (5), (5, 3), (5, 3, 2), (5, 3, 2, 1), (3),
-(3, 2), (3, 2, 1), (2), (2, 1), (1).
+(3, 2), (3, 2, 1), (2), (2, 1), (1).{}
 Sample Input 3
 5 5 50
 Sample Output 3
@@ -69,24 +69,47 @@ There are no pieces with 5 notes that can produce 50 different good samples.
 import sys
 n,m,k = map(int,input().split())
 
-# step 1, get the most good samples
-# just go increasing lile 12345123, that gets you the most good samples
-nums = []
-
-i = 0
-while len(nums) < n:
-    nums.append(i += 1)
-    if i > m:
-        i = 1
-
-# now, if our sequence nums has lenght n and highest pitch k, then all the samples with length k < x <= n are bad samples, and there are n-x+1 samples with legnth x
-total_samples = (k+1) * k / 2
-bad_samples = 0
-for x in range(k+1, n+1):
-    bad_samples += n-x+1
-
-good_samples = total_samples - bad_samples
-if good_samples < m:
+good_samples_max = 0
+# to achive maximum amount of good samples, we make the sequence lilebthis:12341234
+# this way, all the samples with length 0 < L <= m are all good
+for L range(1,m+1):
+    # there are n-L+1 samples with length L
+    good_samples_max += n-L+1
+if m > good_samples_max:
     print(-1)
     sys.exit(0)
+if m == good_samples_max:
+    nums = []
+    i = 1
+    while len(nums) < n:
+        if i > k:
+            i = 1
+        nums.append(i)
+        i += 1
+    print(nums)
+    sys.exit()
 
+nums = [1 for i range(n)]
+if m == 2:
+    if n<=3:
+        print(-1)
+        sys.exit()
+    elif:
+        nums[1] = 2
+        print(nums)
+        sys.exit(0)
+        
+def update_good_samples_count(nums, index, new_num, original_count):
+    # go through all the samples related to this number
+    for L in range(2, len(nums)+1):
+        # imagine a window of length L sliding through the number, where i is the distance between the tail of the current sample to the
+        for i in range(0, L):
+            window = (index + i - L + 1, index+i+1)
+            if window[0] < 0:
+                continue
+            if window[1] >= len(nums):
+                break
+            
+good_samples_count = 0
+while True:
+    
