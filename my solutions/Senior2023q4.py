@@ -88,17 +88,18 @@ class Plan: # stores a path to get from one intersection to another
 
 
 # solution for 2023 question 4
-'''
+
 amount_of_intersects, amount_of_roads = map(int, input().split())
 roads = []  # the existing roads, the indexes are sorted by the starting point of each road and stored in the form of (ending, cost, length)
 for i in range(amount_of_roads):
     u, v, cost, length = map(int, input().split())
     road = Road(u-1, v-1, cost, length)
-    roads.append(road)'''
+    roads.append(road)
     
 
-amount_of_intersects, amount_of_roads = 5,7
+'''amount_of_intersects, amount_of_roads = 5,7
 roads = [Road(0, 1, 15, 1), Road(0, 2, 2, 7), Road(0, 3, 2, 1), Road(1, 3, 9, 9), Road(1, 4, 5, 6),Road(2, 3, 3, 7),Road(3, 4, 4, 4)]
+'''
 
 answers = {}  # store the found answers to the minimum distance plans to go from one intersection to another,
 # in the form of {(start, end):[plan1, plan2, plan3]
