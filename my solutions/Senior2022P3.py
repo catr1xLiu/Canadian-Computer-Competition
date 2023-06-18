@@ -66,7 +66,7 @@ Sample Output 3
 Explanation of Output for Sample Input 3
 There are no pieces with 5 notes that can produce 50 different good samples.
 '''
-
+import sys
 n,m,k = map(int,input().split())
 
 # step 1, get the most good samples
@@ -78,4 +78,15 @@ while len(nums) < n:
     nums.append(i += 1)
     if i > m:
         i = 1
+
+# now, if our sequence nums has lenght n and highest pitch k, then all the samples with length k < x <= n are bad samples, and there are n-x+1 samples with legnth x
+total_samples = (k+1) * k / 2
+bad_samples = 0
+for x in range(k+1, n+1):
+    bad_samples += n-x+1
+
+good_samples = total_samples - bad_samples
+if good_samples < m:
+    print(-1)
+    sys.exit(0)
 
