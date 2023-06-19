@@ -67,19 +67,21 @@ Explanation of Output for Sample Input 3
 There are no pieces with 5 notes that can produce 50 different good samples.
 '''
 import sys
+from copy import deepcopy as cp
 n,m,k = map(int,input().split())
 
-good_samples_max = 0
 # to achive maximum amount of good samples, we make the sequence lilebthis:12341234
 # this way, all the samples with length 0 < L <= m are all good
-for L range(1,m+1):
+good_samples_max = n # samples with length 1 are always good
+for L in range(1,m+1):
     # there are n-L+1 samples with length L
     good_samples_max += n-L+1
-if m > good_samples_max:
+if k > good_samples_max:
     print(-1)
     sys.exit(0)
-if m == good_samples_max:
+if k == good_samples_max # if it happens to be the right answer
     nums = []
+    # generate a sequence like this:1234123
     i = 1
     while len(nums) < n:
         if i > k:
@@ -87,19 +89,12 @@ if m == good_samples_max:
         nums.append(i)
         i += 1
     print(nums)
-    sys.exit()
+    sys.exit(0)
 
-nums = [1 for i range(n)]
-if m == 2:
-    if n<=3:
-        print(-1)
-        sys.exit()
-    elif:
-        nums[1] = 2
-        print(nums)
-        sys.exit(0)
-        
+nums = [1 for i in range(n)]
+
 def update_good_samples_count(nums, index, new_num, original_count):
+    ans = original_count
     # go through all the samples related to this number
     for L in range(2, len(nums)+1):
         # imagine a window of length L sliding through the number, where i is the distance between the tail of the current sample to the
@@ -107,9 +102,30 @@ def update_good_samples_count(nums, index, new_num, original_count):
             window = (index + i - L + 1, index+i+1)
             if window[0] < 0:
                 continue
-            if window[1] >= len(nums):
+            if window[1] > len(nums):
                 break
-            
-good_samples_count = 0
-while True:
+            sample_left = nums[window[0]:index]
+            sample_right = nums[index+1:window[1]]
+            originally_bad_sample = nums[index] in sample_right or nums[index] in sample_left
+            is_bad_sample = new_num in sample_left or new_num in sample_right
+            if originally_bad_sample and not is_bad_sample:
+                ans += 1
+            if not originally_bad_sample and is_bad_sample:
+                ans -= 1
+    return ans
     
+    
+good_samples_count = n # all the samples with length 1 are always good
+while good_samples_count != m:
+    best_move = tuple()
+    closest_distance = float("inf")
+    greatest_pitch = max(nums) # don't go to high,because there might be a really big k
+    for i in range(len(nums)): 
+        for j in range(nums[i], min(greatest_pitch+2, k)):
+            tmp = cp(nums)
+            good_samples_count = update_good_samples_count(nums, i, j, good_samples_count)
+            if abs(m-good_samples_count) < closest_distance:
+                closest_distance = abs(m-good_samples_count)
+                best_move = (i,j)
+    nums[best_move[0]] = best_move[1]
+    print(nums)
