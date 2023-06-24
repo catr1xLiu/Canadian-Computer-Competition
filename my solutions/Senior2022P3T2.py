@@ -30,23 +30,22 @@ but we can't do this if k is smaller than the amount of good samples of a piece 
 all samples in 1234...m are good since all the notes are unique, so there are 1 + 2 + 3 + 4 + ... + m good samples 
 '''
 
-if m < n and (m+1)*m/2 < k and True:
-    nums = [i for i in range(1, m+1)]
-    amount_of_good_samples_needed = k-(m+1)*m/2
-    pitch = 1
-    for i in range(int(amount_of_good_samples_needed / m)):
-        nums.append(pitch)
-        pitch += 1
-        if pitch > m:
-            pitch = 1
-    good_samples = int(amount_of_good_samples_needed / m) * m
-    good_tail_length = m
-    nums_max = m
-else:
-    nums = [1]  # the list that contains the current numbers
-    good_samples = n  # the amount of good samples in the current numbers
-    good_tail_length = 1  # the length of the longest tail without a repeating element
-    nums_max = 1
+nums = []
+good_samples = 0
+pitch = 1
+while True:
+    additional_good_samples = min(m, len(nums)+1)
+    if good_samples + additional_good_samples > k:
+        break
+
+    good_samples += additional_good_samples
+    nums.append(pitch)
+    pitch += 1
+    if pitch > m:
+        pitch = 1
+good_tail_length = min(m, len(nums))
+nums_max = max(m, nums[-1])
+print(good_samples)
 
 while len(nums) <= n:
     if good_samples == k:
@@ -60,7 +59,7 @@ while len(nums) <= n:
             if choice == nums[-1 - j]:
                 break
             good_tail_tmp += 1
-        if good_tail_tmp - 1 + good_samples > k:
+        if good_tail_tmp + good_samples > k:
             continue
         if good_tail_tmp > best_choice_good_tail_length:
             best_choice_good_tail_length = good_tail_tmp
@@ -69,6 +68,6 @@ while len(nums) <= n:
     if best_choice > nums_max:
         nums_max = best_choice
     good_tail_length = best_choice_good_tail_length
-    good_samples += good_tail_length-1
+    good_samples += good_tail_length
     print(len(nums), "/", n, good_tail_length)
 print(nums)
