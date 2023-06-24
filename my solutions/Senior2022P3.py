@@ -67,19 +67,19 @@ Explanation of Output for Sample Input 3
 There are no pieces with 5 notes that can produce 50 different good samples.
 '''
 import sys
-from copy import deepcopy as cp
-n,m,k = map(int,input().split())
 
-# to achive maximum amount of good samples, we make the sequence lilebthis:12341234
+n, m, k = map(int, input().split())
+
+# to achieve maximum amount of good samples, we make the sequence like this:12341234
 # this way, all the samples with length 0 < L <= m are all good
-good_samples_max = n # samples with length 1 are always good
-for L in range(1,m+1):
+good_samples_max = 0
+for L in range(1, m + 1):
     # there are n-L+1 samples with length L
-    good_samples_max += n-L+1
-if k > good_samples_max:
+    good_samples_max += n - L + 1
+if k > good_samples_max or k < n:
     print(-1)
     sys.exit(0)
-if k == good_samples_max: # if it happens to be the right answer
+if k == good_samples_max:  # if it happens to be the right answer
     nums = []
     # generate a sequence like this:1234123
     i = 1
@@ -93,48 +93,61 @@ if k == good_samples_max: # if it happens to be the right answer
 
 nums = [1 for i in range(n)]
 
+
 def update_good_samples_count(nums, index, new_num, original_count):
+    if nums[index] == new_num:
+        return original_count
     ans = original_count
     # go through all the samples related to this number
-    for L in range(2, len(nums)+1):
-        # imagine a window of length L sliding through the number, where i is the distance between the tail of the current sample to the
-        # use a list to represent the amount of a pitch inside the sample and use it to identify if there is a repetition
-        pitches_amount =  [0 for i in range(k)] # pitches_amount[i-1] is the amount of pitch i in the current sample
+    for L in range(2, len(nums) + 1):
+        # imagine a window of length L sliding through the number, where i is the distance between the tail of the
+        # current sample to the use a list to represent the amount of a pitch inside the sample and use it to
+        # identify if there is a repetition
+        pitches_amount = [0 for i in range(k)]  # pitches_amount[i-1] is the amount of pitch i in the current sample
         # find the initial value
-        for pitch in nums[max(index-L+1, 0):index+1]: # go through the starting sample
-            pitches_amount[pitch-1] += 1
+        for pitch in nums[max(index - L + 1, 0):max(index - L + 1, 0) + L]:  # go through the starting sample
+            pitches_amount[pitch - 1] += 1
         for i in range(0, L):
-            window = (index + i - L + 1, index+i+1)
+            window = (index + i - L + 1, index + i + 1)
             if window[0] < 0:
                 continue
             if window[1] > len(nums):
                 break
             sample_left = nums[window[0]:index]
-            sample_right = nums[index+1:window[1]]
-            # TODO finish the rest:judge whether the amount of good samples increases or decreases
-            
+            sample_right = nums[index + 1:window[1]]
+            # print(nums[window[0]:window[1]], pitches_amount)
+
+            # judge whether the amount of good samples increases or decreases
+            if max(pitches_amount) == pitches_amount[nums[index] - 1] == 2 and pitches_amount[
+                new_num - 1] == 0:  # if the updated element happens to be the only repetition is the sample, and it becomes non-repeating, ans will increase by 1
+                ans += 1
+            elif max(pitches_amount) == pitches_amount[
+                new_num - 1] == 1:  # if the updated number becomes the first repetition
+                ans -= 1
+
             # update the amount of each pitch
-            pitches_amount[window[0]] -= 1 # the left border disapears
+            if window[1] - window[0] == L:  # if the windows is not as
+                pitches_amount[nums[window[0]] - 1] -= 1  # the left border disappears
             try:
-                pitches_amount[window[1]] += 1
-            except indexError:
+                pitches_amount[nums[window[1]] - 1] += 1
+            except IndexError:
                 break
     return ans
-    
-print(update_good_samples_count([1,1,1,1,1],2, 2, 5))
-sys.exit(0)
-    
-good_samples_count = n # all the samples with length 1 are always good
-while good_samples_count != m:
+
+
+good_samples_count = n  # all the samples with length 1 are always good
+while good_samples_count != k:
     best_move = tuple()
     closest_distance = float("inf")
-    greatest_pitch = max(nums) # don't go to high,because there might be a really big k
-    for i in range(len(nums)): 
-        for j in range(nums[i], min(greatest_pitch+2, k)):
-            tmp = cp(nums)
-            good_samples_count = update_good_samples_count(nums, i, j, good_samples_count)
-            if abs(m-good_samples_count) < closest_distance:
-                closest_distance = abs(m-good_samples_count)
-                best_move = (i,j)
+    greatest_pitch = max(nums)  # don't go to high,because there might be a really big k
+    good_samples_count_tmp = 0
+    for i in range(len(nums)):
+        for j in range(nums[i], min(greatest_pitch + 1, m)+1):
+            good_samples_count_tmp = update_good_samples_count(nums, i, j, good_samples_count)
+            if abs(k - good_samples_count_tmp) < closest_distance:
+                closest_distance = abs(k - good_samples_count_tmp)
+                best_move = (i, j)
+    good_samples_count = update_good_samples_count(nums, best_move[0], best_move[1], good_samples_count)
     nums[best_move[0]] = best_move[1]
-    print(nums)
+
+print(nums)
