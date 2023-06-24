@@ -79,7 +79,7 @@ for L in range(1,m+1):
 if k > good_samples_max:
     print(-1)
     sys.exit(0)
-if k == good_samples_max # if it happens to be the right answer
+if k == good_samples_max: # if it happens to be the right answer
     nums = []
     # generate a sequence like this:1234123
     i = 1
@@ -98,6 +98,11 @@ def update_good_samples_count(nums, index, new_num, original_count):
     # go through all the samples related to this number
     for L in range(2, len(nums)+1):
         # imagine a window of length L sliding through the number, where i is the distance between the tail of the current sample to the
+        # use a list to represent the amount of a pitch inside the sample and use it to identify if there is a repetition
+        pitches_amount =  [0 for i in range(k)] # pitches_amount[i-1] is the amount of pitch i in the current sample
+        # find the initial value
+        for pitch in nums[max(index-L+1, 0):index+1]: # go through the starting sample
+            pitches_amount[pitch-1] += 1
         for i in range(0, L):
             window = (index + i - L + 1, index+i+1)
             if window[0] < 0:
@@ -106,14 +111,18 @@ def update_good_samples_count(nums, index, new_num, original_count):
                 break
             sample_left = nums[window[0]:index]
             sample_right = nums[index+1:window[1]]
-            originally_bad_sample = nums[index] in sample_right or nums[index] in sample_left
-            is_bad_sample = new_num in sample_left or new_num in sample_right
-            if originally_bad_sample and not is_bad_sample:
-                ans += 1
-            if not originally_bad_sample and is_bad_sample:
-                ans -= 1
+            # TODO finish the rest:judge whether the amount of good samples increases or decreases
+            
+            # update the amount of each pitch
+            pitches_amount[window[0]] -= 1 # the left border disapears
+            try:
+                pitches_amount[window[1]] += 1
+            except indexError:
+                break
     return ans
     
+print(update_good_samples_count([1,1,1,1,1],2, 2, 5))
+sys.exit(0)
     
 good_samples_count = n # all the samples with length 1 are always good
 while good_samples_count != m:
