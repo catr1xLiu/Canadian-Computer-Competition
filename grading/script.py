@@ -150,4 +150,5 @@ while good_samples_count != k:
     good_samples_count = update_good_samples_count(nums, best_move[0], best_move[1], good_samples_count)
     nums[best_move[0]] = best_move[1]
 
-print(nums)
+for i in nums:
+    print(i, end=" ")
