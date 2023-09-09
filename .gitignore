@@ -7,3 +7,7 @@ my solutions/.vs/my solutions/FileContentIndex/d3bb10b5-e47e-4e16-8b21-27a486002
 *.json
 my solutions/.vs/my solutions/v17/.wsuo
 .idea
+*.in
+grading/s3/s3.1-02.my_answer
+*.out
+*.my_answer
