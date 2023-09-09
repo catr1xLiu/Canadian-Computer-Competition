@@ -1,7 +1,14 @@
-# in windows, we can specify input and output like this: command.cmd <input.in >output.out
-# test files are named like this: s5.1-01.in and s5.2-03.out
+'''
+
+a simple grading system for canadian computer competition
+grades the
+
+in windows, we can specify input and output like this: command.cmd <input.in >output.out
+test files are named like this: s5.1-01.in and s5.2-03.out
+'''
 
 import sys, os, time, subprocess
+from typing import *
 
 PYTHON_HOME = "python3"
 TIME_OUT = 5
@@ -16,6 +23,25 @@ test_data_filenames_by_groups = [
     [] for i in range(GROUP_NUM)
 ]  # by group
 
+
+def identical_file_compare(inputs:str, outputs:str, expected_outputs:str) -> bool:
+    # compares the expected and actual output to see if the answer is corrected
+    # note some of the problems accept multiple outputs, this function should be altered in such case
+    expected_outputs_lines = expected_outputs.splitlines()
+    output_lines = outputs.splitlines()
+    if (output_lines < expected_outputs_lines):
+        return False
+    for line_num in range(len(expected_outputs_lines)):
+        p1 = expected_outputs_lines[line_num].split()
+        p2 = output_lines[line_num].split()
+        if len(p1) != len(p2):
+            return False
+        for i in range(len(p1)):
+            if p1[i] != p2[i]:
+                return False
+    return True
+
+
 for root, dirs, files in os.walk(test_data_dir):
     for file in files:
         if root != test_data_dir:  # if the file in the subdirectory of the selected directory
@@ -27,7 +53,6 @@ for root, dirs, files in os.walk(test_data_dir):
 
         file = file.split(".")[0] + "." + file.split(".")[1]
         test_data_filenames_by_groups[test_group].append(os.path.join(test_data_dir, file))
-print(test_data_filenames_by_groups)
 
 for group_num in range(len(test_data_filenames_by_groups)):
     print("<--testing group:", group_num + 1, "-->")
@@ -41,14 +66,14 @@ for group_num in range(len(test_data_filenames_by_groups)):
         run_test_command = PYTHON_HOME + " " + program_dir + " <" + input_file + " >" + output_file
 
         if (sys.platform != "win32"):
-            run_test_command = run_test_command  # TODO for linux
+            run_test_command = run_test_command  # TODO adapt linux and unix
 
         starting_time = time.time()
         p = subprocess.Popen(run_test_command, shell=True)
         while p.poll() is None:
             if time.time() - starting_time > TIME_OUT:
                 p.terminate()
-                print('\033[33m<--Time Limit Exceeded for test data ' + test_file_name + '-->\033[0m')
+                print('\033[33m<--TIME LIMIT EXCEEDED for test data ' + test_file_name + '-->\033[0m')
                 break
             time.sleep(0.01)
         if p.poll() is None:
@@ -56,8 +81,22 @@ for group_num in range(len(test_data_filenames_by_groups)):
             continue
         else:
             finish_time = time.time()
-            # TODO judge whether the answer is correct
-            print("\033[32mOK\033[0m", end=" ")
-            print("<--time used:", finish_time - starting_time, + "-->")
+
+            # call to judge function
+            expected_outputs = ""
+            outputs = ""
+            inputs = ""
+            with open(input_file, "r") as f:
+                inputs = str(f.read())
+            with open(expected_output_file, "r") as f:
+                expected_outputs = str(f.read())
+            with open(output_file, "r") as f:
+                outputs = str(f.read())
+            if identical_file_compare(inputs, outputs, expected_outputs):
+                print("\033[32mOK\033[0m", end=" ")
+                print("<--time used:", finish_time - starting_time, "-->")
+            else:
+                print("\033[31mWRONG ANSWER\033[0m")
 
     print("\n\n")
+    
