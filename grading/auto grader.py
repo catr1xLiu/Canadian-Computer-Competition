@@ -99,4 +99,3 @@ for group_num in range(len(test_data_filenames_by_groups)):
                 print("\033[31mWRONG ANSWER\033[0m")
 
     print("\n\n")
-    
