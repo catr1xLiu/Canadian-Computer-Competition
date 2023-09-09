@@ -12,7 +12,7 @@ from typing import *
 
 PYTHON_HOME = "python3"
 TIME_OUT = 5
-GROUP_NUM = 4
+GROUP_NUM = 3
 
 print("running on platform: ", sys.platform)
 
@@ -52,7 +52,8 @@ for root, dirs, files in os.walk(test_data_dir):
             continue
 
         file = file.split(".")[0] + "." + file.split(".")[1]
-        test_data_filenames_by_groups[test_group].append(os.path.join(test_data_dir, file))
+        if os.path.join(test_data_dir, file) not in test_data_filenames_by_groups[test_group]:
+            test_data_filenames_by_groups[test_group].append(os.path.join(test_data_dir, file))
 
 for group_num in range(len(test_data_filenames_by_groups)):
     print("<--testing group:", group_num + 1, "-->")
