@@ -146,7 +146,7 @@ print(good_triangles_count)
 
 good_triangles_count = 0
 if c%2 == 0: # if the circle has even number of points
-    # go through all thebpossible triangles with p1<p2<p3
+    # go through all the possible triangles with p1<p2<p3
     for p1 in range(c//2 -1):  # the first point of the triangle cannot exceed the point before the second half of the circle(assuming that we devide it through its diameter from the point0). This is because p1<p2<p3, meaning that the other 
         if circle[p1] == 0:
            continue
@@ -161,5 +161,5 @@ if c%2 == 0: # if the circle has even number of points
             current_included_points += circle[p3_bound]
             good_triangles_count += current_included_points * p1_scale * p2_scale
 else:
-    
+    pass
 print(good_triangles_count)

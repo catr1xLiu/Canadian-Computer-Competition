@@ -10,7 +10,7 @@ test files are named like this: s5.1-01.in and s5.2-03.out
 import sys, os, time, subprocess
 from typing import *
 
-PYTHON_HOME = "python"
+PYTHON_HOME = "python3"
 TIME_OUT = 5
 GROUP_NUM = 3
 
