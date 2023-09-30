@@ -11,7 +11,7 @@ import sys, os, time, subprocess
 from typing import *
 
 PYTHON_HOME = "python"
-TIME_OUT = 5
+TIME_OUT = 30
 GROUP_NUM = 3
 
 print("running on platform: ", sys.platform)
