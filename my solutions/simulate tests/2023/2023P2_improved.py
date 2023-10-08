@@ -11,7 +11,7 @@ def mina(length):
         ans = min(avalue(crop), ans)
     return ans
 
-avalues = dict()
+avalues = [[-1 for i in range(n)] for j in range(n)]
 def avalue(crop:set):
     global avalues
     
@@ -19,11 +19,11 @@ def avalue(crop:set):
     if left >= right:
         return 0
     
-    if crop in avalues.keys():
+    if avalue[crop[0]][crop[1]] != -1:
         return avalues[crop]
     ans = abs(mounts[left]-mounts[right])
     ans += avalue((left+1, right-1))
-    avalues[crop] = ans
+    avalues[crop[0]][crop[1]] = ans
     return ans
 
 answers = [0 for i in range(n)]
