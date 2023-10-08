@@ -43,6 +43,7 @@ variance = 0
 for i in datas:
     variance += (i-mean) ** 2
     
+variance /= len(datas)-1
 standard_deviation = variance ** 0.5
 
 outlier_range = (q1-IQR*1.5, q3+IQR*1.5)
@@ -65,3 +66,13 @@ print("IQR:", q3-q1)
 print("Q1-1.5IQR:", outlier_range[0])
 print("Q3+1.5IQR:", outlier_range[1])
 print("outliers:", left_half, "(left)", right_half, "(right)")
+
+while True:
+    x = int(input("x>>"))
+    i = 0
+    for i in range(len(datas)):
+        if datas[i] > x:
+            break
+    
+    print("percentile", i/len(datas))
+    print("z-score", (x-mean) / standard_deviation)
