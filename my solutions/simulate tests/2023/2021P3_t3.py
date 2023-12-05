@@ -18,13 +18,13 @@ for i in range(n):
             key_pts[p-d] += w
         except KeyError:
             key_pts[p-d] = w
-        key_pts_pos.append(p-d)
+            key_pts_pos.append(p-d)
 
     try:
         key_pts[p+d] += w
     except KeyError:
         key_pts[p+d] = w
-    key_pts_pos.append(p+d)
+        key_pts_pos.append(p+d) # put the append command here so it does not add two times
 
 result = total_t
 previous_position = 0

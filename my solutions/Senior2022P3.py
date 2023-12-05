@@ -88,7 +88,8 @@ if k == good_samples_max:  # if it happens to be the right answer
             i = 1
         nums.append(i)
         i += 1
-    print(nums)
+    for i in nums:
+        print(i, end=" ")
     sys.exit(0)
 
 nums = [1 for i in range(n)]
