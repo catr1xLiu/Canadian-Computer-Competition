@@ -16,4 +16,17 @@ def time_arrival(pos, t):
         return t
     if t > n:
         return n # the maximum amount of time needed
-    if time_arrival[pos][t]
+    if time_arrival[pos][t] != -1:
+        return time_arrival[pos][t]
+    result = float("inf")
+    if pos == t: # the train is here
+        for i in range(pos, n):
+            if time_arrival[i][i] != -1:
+                result = min(result, time_arrival[i][i])
+    try:
+        for i in connection[pos]:
+            result = min(result, time_arrival[i][i+1]) # key exception, index
+    except Exception:
+        pass
+    return result
+
