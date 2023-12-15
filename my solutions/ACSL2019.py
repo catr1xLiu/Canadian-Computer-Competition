@@ -1,13 +1,21 @@
 from copy import deepcopy as cp
-def count_prime_factors(num, factors=set()):
-    for i in range(2, num+1):
-        print(num, i)
-        if (num%i == 0):
-            factors = set(cp(list(factors))) # copy it
-            factors.add(i)
-            return count_prime_factors(int(num/i), factors)
-        
-    return len(list(factors))
+from math import sqrt
+
+
+def count_prime_factors(num):
+    factors = get_prime_factors(num)
+    count = len(set(factors))
+    return count
+
+def get_prime_factors(num, factors=list()):
+    for i in range(2, int(sqrt(num))+2):
+        if (int(num/i) != num/i):  # how is this so freaking slow?
+            continue
+        factors = cp(factors) # copy it
+        factors.append(i)
+        return get_prime_factors(int(num/i), factors)
+    factors.append(num)
+    return factors
 
 
 def calc(n:str, p:int) -> str:
@@ -21,8 +29,6 @@ def calc(n:str, p:int) -> str:
 
     return result
 
-# for i in range(5):
-#     n, p = input().split()
-#     print(calc(n, int(p)))
-
-print(count_prime_factors(60098065452))
+for i in range(5):
+    n, p = input().split()
+    print(calc(n, int(p)))
