@@ -13,7 +13,7 @@ def b_search(l, x, mi=0, ma=-1): # inclusive
     guess = int((ma-mi)/2)
     if l[guess] < x:
         return b_search(l, x, guess, ma)
-    else if l[guess] > x:
+    elif l[guess] > x:
         return b_search(l, x, mi, guess)
     else:
         return (guess, guess)
