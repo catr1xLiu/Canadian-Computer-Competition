@@ -51,9 +51,9 @@ def print_rows():
 
 
 while True:
-    # print(hand)
-    # print(previously_touched_row)
-    # print_rows()
+    print(hand)
+    print(previously_touched_row)
+    print_rows()
     flag = False
     if previously_touched_row != -1 and is_double(previously_touched_row):
         for tile_id in range(len(hand)): # go through all tiles in hand
@@ -67,14 +67,9 @@ while True:
         for tile_id in range(len(hand)): # go through all tiles in hand
             if flag:
                 break
-            match = match_tile(hand[tile_id], (previously_touched_row+1)%4)
-            if (match != -1):
-                rows[(previously_touched_row+1)%4].append(match)
-                hand[tile_id] = -1
-                flag=True
-                break
-            for row in range(4):
+            for i in range(4):
                 # print(hand,i)
+                row = (previously_touched_row + 1 + i)%4
                 match = match_tile(hand[tile_id], row)
                 if match != -1:
                     rows[row].append(match)
