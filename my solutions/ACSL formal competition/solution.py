@@ -55,7 +55,7 @@ def match_element_to_rows(element_id):
     if match_element_to_row(hand, element_id, start_searching_pos):
         return True
 
-    for i in range(last_touched_row+1,4):
+    for i in range(4):
         if match_element_to_row(hand, element_id, i):
             return True
 
