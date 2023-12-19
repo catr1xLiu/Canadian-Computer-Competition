@@ -54,4 +54,5 @@ for i in range(d):
     x, y = map(int, input().split())
     swap_route(x-1,y-1)
     sort_stations()
+    reset_results()
     print(time_arrival(0,0))
