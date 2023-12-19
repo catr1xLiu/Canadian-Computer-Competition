@@ -1,5 +1,15 @@
 n, w, d = map(int, input().split())
 
+'''
+4 3 3
+1 2
+3 4
+4 1
+1 4 3 2
+3 4
+4 2
+3 2
+'''
 connections = {}
 for i in range(w):
     a, b = map(int, input().split())
@@ -12,7 +22,7 @@ for i in range(w):
 
 time_arrival_results = []
 
-route = map(int, input().split()) # here the stations are 1~n, not 0~n-1
+route = list(map(int, input().split())) # here the stations are 1~n, not 0~n-1
 route_sorted = dict() # [start] = (time, end)
 
 def sort_stations():
@@ -26,7 +36,7 @@ def sort_stations():
 
 def reset_results():
     global time_arrival_results
-    time_arrival_results = [[[-1] * n] for i in range(n)]
+    time_arrival_results = [[-1] * n for i in range(n)]
 
 def time_arrival(pos, time):
     if time_arrival_results[pos][time] != -1:
