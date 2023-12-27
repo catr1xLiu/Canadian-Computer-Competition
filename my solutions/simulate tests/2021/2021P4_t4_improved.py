@@ -35,13 +35,7 @@ def swap_route(s1,s2):
     subway_route[s1] = subway_route[s2]
     subway_route[s2] = swap
 
-time_needed_to_get_to_pos = [0 for i in range()] # TODO [start][end] = time_needed
-def find_all_paths_from_point(pos, time=0):
-    # TODO work on this, find and sort all possible paths, which are combination of 
-    if pos in paths or (pos not in connections):
-        return
-    for end in range(connections[pos]):
-        paths[end]
+time_needed_to_get_to_pos = [0 for i in range()] # TODO [start][end] = time_needed_to_get_to (without taking subway)
 
 def time_arrival(pos, time):
     if time > n-1:
