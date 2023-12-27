@@ -48,9 +48,14 @@ def print_rows():
     for i in rows:
         print(i)
     print()
+def still_have_hand():
+    for i in hand:
+        if i != -1:
+            return True
+    return False
+        
 
-
-while True:
+while still_have_hand():
     print(hand)
     print(previously_touched_row)
     print_rows()
