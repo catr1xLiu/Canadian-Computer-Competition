@@ -19,7 +19,10 @@ for i in range(w):
     except KeyError:
         connections[start] = [end]
 
-time_arrival_results = {} # [station][time] = time_arrival
+combined_connections = {} # [station] = (end, tim_needed)
+for start in connections:
+    # TODO here, combine the connections, avoid close-loop
+    pass
 
 subway_route = list(map(int, input().split())) # [time] = stationID
 
@@ -34,31 +37,6 @@ def swap_route(s1,s2):
     swap = subway_route[s1]
     subway_route[s1] = subway_route[s2]
     subway_route[s2] = swap
-
-time_needed_to_get_to_pos = [[-1]*(n+1) for i in range(n+1)] # [start][end] = list of path (without taking subway)
-for start in connections:
-    for end in connections[start]:
-        time_needed_to_get_to_pos[start][end] = 1
-def dp(start, end, already_been = set()):
-    if start == end:
-        return 0
-    if time_needed_to_get_to_pos[start][end] != -1:
-        return time_needed_to_get_to_pos[start][end]
-    res = float("inf")
-    if start not in connections:
-        return res
-    for i in range(1, len(time_needed_to_get_to_pos[start])):
-        if time_needed_to_get_to_pos[start][i] != -1 and time_needed_to_get_to_pos[start][i]!=float("inf") and (i not in already_been):
-            already_been_new = set(list(already_been))
-            already_been_new.add(i)
-            res = min(res, dp(i, end, already_been_new)+time_needed_to_get_to_pos[start][i])
-    time_needed_to_get_to_pos[start][end] = res
-    return res
-for start in connections:
-    for end in range(1, n+1):
-        dp(start, end)
-
-print(time_needed_to_get_to_pos)
 
 def time_arrival(pos, time):
     if time > n-1:
