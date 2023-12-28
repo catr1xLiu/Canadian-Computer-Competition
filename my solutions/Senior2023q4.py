@@ -174,8 +174,8 @@ def find_total_cost(plans: list) -> int: # find the total cost of a set of plans
     total_cost = 0
     for road in roads:
         total_cost  += road.cost
-        print(road)
-    print(total_cost, "\n\n\n\n")
+    #     print(road)
+    # print(total_cost, "\n\n\n\n")
     return total_cost
 
 min_cost = float("inf")

@@ -19,8 +19,8 @@ def avalue(crop:set):
     if left >= right:
         return 0
     
-    if avalue[crop[0]][crop[1]] != -1:
-        return avalues[crop]
+    if avalues[crop[0]][crop[1]] != -1:
+        return avalues[crop[0]][crop[1]]
     ans = abs(mounts[left]-mounts[right])
     ans += avalue((left+1, right-1))
     avalues[crop[0]][crop[1]] = ans
