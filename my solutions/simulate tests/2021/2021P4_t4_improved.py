@@ -67,3 +67,13 @@ for day in range(d):
     swap_route(s1-1, s2-1)
     reset_results()
     print(time_arrival(1,0))
+
+
+'''
+we have been thinking too complicated in this problem
+the things we have to take advantage are:
+1. if you get on a subway, you manage to go to any point at the time they have the subway (ts)
+2. there is no point getting off and then getting on a subway, as it is always going to take ts to get to a station by subway
+3. running a dijkastra algorithm will be good
+
+'''
