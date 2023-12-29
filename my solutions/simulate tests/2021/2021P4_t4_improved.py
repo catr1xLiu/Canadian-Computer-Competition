@@ -1,5 +1,7 @@
-n, w, d = map(int, input().split())
+import sys
+sys.setrecursionlimit(4000)
 
+n, w, d = map(int, input().split())
 
 '''
 4 3 3
@@ -19,12 +21,11 @@ for i in range(w):
     except KeyError:
         connections[start] = [end]
 
-combined_connections = {} # [station] = (end, tim_needed)
-for start in connections:
-    # TODO here, combine the connections, avoid close-loop
-    pass
-
 subway_route = list(map(int, input().split())) # [time] = stationID
+time_subway_arrive = [0 for _ in range(n+1)] #[station] = time
+
+for i in range(len(subway_route)):
+    time_subway_arrive[subway_route[i]] = i
 
 
 def reset_results():
@@ -37,20 +38,27 @@ def swap_route(s1,s2):
     swap = subway_route[s1]
     subway_route[s1] = subway_route[s2]
     subway_route[s2] = swap
+    time_subway_arrive[subway_route[s1]] = s2 
+    time_subway_arrive[subway_route[s2]] = s1
 
-def time_arrival(pos, time):
+
+def time_arrival(pos, time, stations_been_to=[]):
     if time > n-1:
         return float("inf")
-    if time_arrival_results[pos][time] != -1:
-        return time_arrival_results[pos][time]
     if pos == n:
         return time 
+    if time_arrival_results[pos][time] != -1:
+        return time_arrival_results[pos][time]
     res = float("inf")
     if subway_route[time] == pos and time+1 < len(subway_route):
-        res = min(res, time_arrival(subway_route[time+1], time+1))
-    for end in range(1, len(time_needed_to_get_to_pos[pos])):
-        if time_needed_to_get_to_pos[pos][end] != -1:
-            res = min(res, time_arrival(end, time+time_needed_to_get_to_pos[pos][end]))
+        res = min(res, time_arrival(subway_route[time+1], time+1, stations_been_to + [pos]))
+    elif time_subway_arrive[pos] > time:
+        res = min(res, time_arrival(pos, time_subway_arrive[pos], stations_been_to)) # wait for train
+    if pos in connections:
+        for end in connections[pos]:
+            if end in stations_been_to:
+                continue
+            res = min(res, time_arrival(end, time+1, stations_been_to + [pos]))
     time_arrival_results[pos][time] = res
     return res
 
