@@ -60,7 +60,9 @@ for i in range(w): # input the walways
 
 # run the dijkastra's to find the time needed to get from a station to stationN, using walkways only
 
+station_to_destination_time_walways = {n-1:0}
 visited_stations = set([n-1]) # start from station n
+looking_at = n-1
 while len(visited_stations) < n-1:
    for walway_end in visited_stations:
       for walway_start in walways_reversed[walway_end]:
