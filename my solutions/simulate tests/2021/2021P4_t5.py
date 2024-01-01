@@ -32,3 +32,36 @@ So we can solve the problem by:
         (3: start -> subway -> walways -> end) or (4: start -> walways -> subway -> walways -> end), we let stationT be the station at which you transfer from subway to walways
             time_arrival = time_subway_arrive[stationT] + station_to_destination_time_walways[stationT]
 '''
+
+
+import sys
+# sys.setrecursionlimit(99999) # because who gives a
+
+n, w, d = map(int, input().split())
+
+walways = {}  # stores the walways, walways[stationX] = [station1, station2, ...], stations that stationX connects to
+walways_reversed = {} # stores the walways, but reversed, walways_reversed[stationX] = [station1, station2, ...], stations that connects to stationX
+for i in range(w): # input the walways
+    start, end = map(int, input().split())
+    # we change every point to 0~n-1
+    start -= 1
+    end -= 1
+    # add them to the table
+    if start in walways:
+       walways[start].append(end) 
+    else:
+       walways[start] = [end]
+    if end in walways_reversed:
+       walways_reversed[end].append(start)
+    else:
+       walways_reversed[end] = [start]
+
+
+
+# run the dijkastra's to find the time needed to get from a station to stationN, using walkways only
+
+visited_stations = set([n-1]) # start from station n
+while len(visited_stations) < n-1:
+   for walway_end in visited_stations:
+      for walway_start in walways_reversed[walway_end]:
+         if 
