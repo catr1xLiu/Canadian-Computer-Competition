@@ -81,8 +81,6 @@ while flag:
     if flag:
         visited_stations.add(walkway_start)
 
-print(station_to_destination_time_walkways)
-
 start_to_station_walkway = dict()
 for i in range(1, n):
    start_to_station_walkway[i] = float("inf")
@@ -104,4 +102,42 @@ while flag:
     if flag:
         visited_stations.add(walkway_end)
 
-print(start_to_station_walkway)
+
+'''
+the subway route
+'''
+subway_route = list(map(int, input().split())) # [time] = stationID
+time_subway_arrive = [0 for _ in range(n+1)] #[station] = time
+catch_train_time = float("inf") # the min time we need to be on the train
+catch_train_station = None
+
+for i in range(len(subway_route)):
+    time_subway_arrive[subway_route[i]] = i
+
+def update_catch_train_time():
+    global catch_train_time, catch_train_station
+    for i in range(len(subway_route)):
+        if i >= start_to_station_walkway[subway_route[i]]:
+            if catch_train_time > i:
+                catch_train_time = i
+                catch_train_station = subway_route[i]
+
+update_catch_train_time()
+
+def swap_route(s1,s2):
+    swap = subway_route[s1]
+    subway_route[s1] = subway_route[s2]
+    subway_route[s2] = swap
+    time_subway_arrive[subway_route[s1]] = s2 
+    time_subway_arrive[subway_route[s2]] = s1
+
+    if s1 == catch_train_station or s2 == catch_train_station:
+        update_catch_train_time() # only updat when the station in which we catch our train changes
+
+
+''' 
+for the n days
+'''
+for day in range(d):
+    s1, s2 = map(int, input().split())
+    swap_route(s1-1, s2-1)
