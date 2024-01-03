@@ -60,13 +60,21 @@ for i in range(w): # input the walways
 
 # run the dijkastra's to find the time needed to get from a station to stationN, using walkways only
 
-station_to_destination_time_walways = dict()
+station_to_destination_time_walkways = dict()
 for i in range(n-1):
-   station_to_destination_time_walways[i] = float("inf")
-station_to_destination_time_walways[n-1] = 0
+   station_to_destination_time_walkways[i] = float("inf")
+station_to_destination_time_walkways[n-1] = 0
 visited_stations = set([n-1]) # start from station n
-looking_at = n-1
-while len(visited_stations) < n-1:
-   for walway_end in visited_stations:
-      for walway_start in walways_reversed[walway_end]:
-         if 
+flag = True
+while flag:
+    flag = False
+    for walkway_end in visited_stations:
+        for walkway_start in walways_reversed[walkway_end]:
+            if station_to_destination_time_walkways[walkway_start] > station_to_destination_time_walkways[walkway_end]+1:
+                station_to_destination_time_walkways[walkway_start] = station_to_destination_time_walkways[walkway_end]+1
+                flag = True 
+                break
+    if flag:
+      visited_stations.add(walkway_start)
+
+print(station_to_destination_time_walkways)
