@@ -44,8 +44,6 @@ walways_reversed = {} # stores the walways, but reversed, walways_reversed[stati
 for i in range(w): # input the walways
     start, end = map(int, input().split())
     # we change every point to 0~n-1
-    start -= 1 # TODO this does not mtach
-    end -= 1
     # add them to the table
     if start in walways:
        walways[start].append(end) 
@@ -61,10 +59,10 @@ for i in range(w): # input the walways
 # run the dijkastra's to find the time needed to get from a station to stationN, using walkways only
 
 station_to_destination_time_walkways = dict()
-for i in range(n-1):
+for i in range(1, n+1):
    station_to_destination_time_walkways[i] = float("inf")
-station_to_destination_time_walkways[n-1] = 0
-visited_stations = set([n-1]) # start from station n
+station_to_destination_time_walkways[n] = 0
+visited_stations = set([n]) # start from station n
 flag = True
 while flag:
     flag = False
@@ -82,10 +80,10 @@ while flag:
         visited_stations.add(walkway_start)
 
 start_to_station_walkway = dict()
-for i in range(1, n):
+for i in range(1, n+1):
    start_to_station_walkway[i] = float("inf")
-start_to_station_walkway[0] = 0
-visited_stations = set([0]) # start from station 0
+start_to_station_walkway[1] = 0
+visited_stations = set([1]) # start from station 0
 flag = True
 while flag:
     flag = False
@@ -143,11 +141,11 @@ for _ in range(d):
     s1, s2 = map(int, input().split())
     swap_route(s1-1, s2-1)
 
-    shortest_path_time = station_to_destination_time_walkways[0]
+    shortest_path_time = station_to_destination_time_walkways[1]
     for time in range(catch_train_time+1, n): 
         # TODO we don't need to look for all the stations, pick the stations that are able to reach the destination with walways when update_catch_train_time, and examine them only
         current_station = subway_route[time]
         if station_to_destination_time_walkways[current_station] != float("inf"):
-            shortest_path_time = min(station_to_destination_time_walkways[current_station] + time)
+            shortest_path_time = min(station_to_destination_time_walkways[current_station] + time, shortest_path_time)
 
     print(shortest_path_time)
