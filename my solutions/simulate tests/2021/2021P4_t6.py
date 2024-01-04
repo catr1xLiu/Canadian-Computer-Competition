@@ -115,18 +115,18 @@ def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightb
 def update_time_needed_arrive_through_transfer(station):
     if station not in station_transfer_in_increasing_time_order:
         return
-    time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] +  + station_to_destination_time_walkways[station]
+    time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] + station_to_destination_time_walkways[station]
     station_transfer_in_increasing_time_order.pop(station_index_in_STIITO[station])
     newindex = b_search_index(time_needed_to_arrive_through_station_transfer[station], station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
     station_transfer_in_increasing_time_order.insert(newindex, station)
     station_index_in_STIITO[station] = newindex
 
 def swap_route(s1,s2):
+    time_subway_arrive[subway_route[s1]] = s2 
+    time_subway_arrive[subway_route[s2]] = s1
     swap = subway_route[s1]
     subway_route[s1] = subway_route[s2]
     subway_route[s2] = swap
-    time_subway_arrive[subway_route[s1]] = s2 
-    time_subway_arrive[subway_route[s2]] = s1
     update_time_needed_arrive_through_transfer(subway_route[s1])
     update_time_needed_arrive_through_transfer(subway_route[s2])
 
@@ -138,3 +138,5 @@ for _ in range(d):
     s1, s2 = map(int, input().split())
     swap_route(s1-1, s2-1)
     print(time_needed_to_arrive_through_station_transfer[station_transfer_in_increasing_time_order[0]])
+
+# TODO WA
