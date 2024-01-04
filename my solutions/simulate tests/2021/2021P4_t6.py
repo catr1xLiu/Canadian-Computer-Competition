@@ -4,10 +4,6 @@ so no need to worry about when we can get on the train
 this should be very easy
 '''
 
-
-import sys
-# sys.setrecursionlimit(99999) # because who gives a
-
 n, w, d = map(int, input().split())
 
 walways = {}  # stores the walways, walways[stationX] = [station1, station2, ...], stations that stationX connects to
@@ -90,20 +86,17 @@ def mergesort(indexs, values:dict):
     return merge(left, right, values)
 
 station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
-station_index_in_STIITO = dict()
-for i in range(len(station_transfer_in_increasing_time_order)):
-    station_index_in_STIITO[station_transfer_in_increasing_time_order[i]] = i
 
 
 def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightbound=-1):
     if rightbound == -1:
         rightbound = len(indexes_sorted)
 
-    if (rightbound - left_bound == 2):
-        return left_bound + 1
+    if (rightbound - left_bound == 0):
+        return 0
     if (rightbound - left_bound == 1):
         if value < values[indexes_sorted[left_bound]]:
-            return left_bound-1
+            return left_bound
         return left_bound + 1
     
     mid = (left_bound + rightbound) // 2
@@ -111,15 +104,13 @@ def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightb
         return b_search_index(value, indexes_sorted, values, left_bound=left_bound, rightbound=mid)
     return b_search_index(value, indexes_sorted, values, left_bound=mid, rightbound=rightbound)
 
-
 def update_time_needed_arrive_through_transfer(station):
     if station not in station_transfer_in_increasing_time_order:
         return
     time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] + station_to_destination_time_walkways[station]
-    station_transfer_in_increasing_time_order.pop(station_index_in_STIITO[station])
+    station_transfer_in_increasing_time_order.remove(station)
     newindex = b_search_index(time_needed_to_arrive_through_station_transfer[station], station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
     station_transfer_in_increasing_time_order.insert(newindex, station)
-    station_index_in_STIITO[station] = newindex
 
 def swap_route(s1,s2):
     time_subway_arrive[subway_route[s1]] = s2 
@@ -135,8 +126,7 @@ def swap_route(s1,s2):
 for the n days
 '''
 for _ in range(d):
+    # print("station in inc:", station_transfer_in_increasing_time_order)
     s1, s2 = map(int, input().split())
     swap_route(s1-1, s2-1)
     print(time_needed_to_arrive_through_station_transfer[station_transfer_in_increasing_time_order[0]])
-
-# TODO WA
