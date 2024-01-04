@@ -90,6 +90,10 @@ def mergesort(indexs, values:dict):
     return merge(left, right, values)
 
 station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
+station_index_in_STIITO = dict()
+for i in range(len(station_transfer_in_increasing_time_order)):
+    station_index_in_STIITO[station_transfer_in_increasing_time_order[i]] = i
+
 
 def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightbound=-1):
     if rightbound == -1:
@@ -112,9 +116,10 @@ def update_time_needed_arrive_through_transfer(station):
     if station not in station_transfer_in_increasing_time_order:
         return
     time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] +  + station_to_destination_time_walkways[station]
-    station_transfer_in_increasing_time_order.pop(station)
+    station_transfer_in_increasing_time_order.pop(station_index_in_STIITO[station])
     newindex = b_search_index(time_needed_to_arrive_through_station_transfer[station], station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
     station_transfer_in_increasing_time_order.insert(newindex, station)
+    station_index_in_STIITO[station] = newindex
 
 def swap_route(s1,s2):
     swap = subway_route[s1]
