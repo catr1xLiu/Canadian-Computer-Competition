@@ -4,6 +4,8 @@ so no need to worry about when we can get on the train
 this should be very easy
 '''
 
+from time import perf_counter as us
+
 n, w, d = map(int, input().split())
 
 walways = {}  # stores the walways, walways[stationX] = [station1, station2, ...], stations that stationX connects to
@@ -105,10 +107,15 @@ def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightb
 def update_time_needed_arrive_through_transfer(station):
     if station not in station_transfer_in_increasing_time_order:
         return
+    t0 = us()
     time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] + station_to_destination_time_walkways[station]
-    station_transfer_in_increasing_time_order.remove(station)
+    print("time needed1: ",(us()-t0)*1000)
+    station_transfer_in_increasing_time_order.remove(station) # remove takes 10ms to complete
+    print("time needed2: ",(us()-t0)*1000)
     newindex = b_search_index(time_needed_to_arrive_through_station_transfer[station], station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
+    print("time needed3: ",(us()-t0)*1000)
     station_transfer_in_increasing_time_order.insert(newindex, station)
+    print("time needed: ",(us()-t0)*1000)
 
 def swap_route(s1,s2):
     time_subway_arrive[subway_route[s1]] = s2 
