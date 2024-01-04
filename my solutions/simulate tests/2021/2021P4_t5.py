@@ -115,7 +115,6 @@ for i in range(len(subway_route)):
 def update_catch_train_time():
     global catch_train_time, catch_train_station
     for i in range(len(subway_route)):
-        print(subway_route[i])
         if i >= start_to_station_walkway[subway_route[i]]:
             if catch_train_time > i:
                 catch_train_time = i
