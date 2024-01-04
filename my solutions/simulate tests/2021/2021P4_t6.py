@@ -99,6 +99,23 @@ def mergesort(indexs, values:dict):
 
 station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
 
+def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightbound=-1):
+    if rightbound == -1:
+        rightbound = len(indexes_sorted)
+
+    if (rightbound - left_bound == 2):
+        return left_bound + 1
+    if (rightbound - left_bound == 1):
+        if value < values[indexes_sorted[left_bound]]:
+            return left_bound-1
+        return left_bound + 1
+    
+    mid = (left_bound + rightbound) // 2
+    if value < values[indexes_sorted[mid]]:
+        return b_search_index(value, indexes_sorted, values, left_bound=left_bound, rightbound=mid)
+    return b_search_index(value, indexes_sorted, values, left_bound=mid, rightbound=rightbound)
+
+
 ''' 
 for the n days
 '''
@@ -108,7 +125,6 @@ for _ in range(d):
 
     shortest_path_time = station_to_destination_time_walkways[1]
     for time in range(catch_train_time+1, n): 
-        # TODO we don't need to look for all the stations, pick the stations that are able to reach the destination with walways when update_catch_train_time, and examine them only
         current_station = subway_route[time]
         if station_to_destination_time_walkways[current_station] != float("inf"):
             shortest_path_time = min(station_to_destination_time_walkways[current_station] + time, shortest_path_time)
