@@ -110,7 +110,7 @@ def update_time_needed_arrive_through_transfer(station):
     t0 = us()
     time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] + station_to_destination_time_walkways[station]
     print("time needed1: ",(us()-t0)*1000)
-    station_transfer_in_increasing_time_order.remove(station) # remove takes 10ms to complete
+    station_transfer_in_increasing_time_order.remove(station) # remove takes 10ms to complete TODO use a better data structer
     print("time needed2: ",(us()-t0)*1000)
     newindex = b_search_index(time_needed_to_arrive_through_station_transfer[station], station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
     print("time needed3: ",(us()-t0)*1000)
