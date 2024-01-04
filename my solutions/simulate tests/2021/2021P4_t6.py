@@ -21,8 +21,6 @@ for i in range(w): # input the walways
     else:
        walways_reversed[end] = [start]
 
-
-
 # run the dijkastra's to find the time needed to get from a station to stationN, using walkways only
 
 station_to_destination_time_walkways = dict()
@@ -32,20 +30,19 @@ station_to_destination_time_walkways[n] = 0
 visited_stations = set([n]) # start from station n
 flag = True
 while flag:
-    flag = False
+    nodes_to_be_added = []
     for walkway_end in visited_stations:
         if walkway_end not in walways_reversed:
             continue
         for walkway_start in walways_reversed[walkway_end]:
             if station_to_destination_time_walkways[walkway_start] > station_to_destination_time_walkways[walkway_end]+1:
                 station_to_destination_time_walkways[walkway_start] = station_to_destination_time_walkways[walkway_end]+1
-                flag = True 
-                break
-        if flag:
-            break
-    if flag:
-        visited_stations.add(walkway_start)
-
+                nodes_to_be_added.append(walkway_start)
+    if nodes_to_be_added:
+        for i in nodes_to_be_added:
+            visited_stations.add(i)
+    else:
+        break
 '''
 the subway route
 '''
@@ -85,8 +82,9 @@ def mergesort(indexs, values:dict):
 
     return merge(left, right, values)
 
+print("start of merge sort")
 station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
-
+print("end of merge sort")
 
 def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightbound=-1):
     if rightbound == -1:
@@ -129,4 +127,5 @@ for _ in range(d):
     # print("station in inc:", station_transfer_in_increasing_time_order)
     s1, s2 = map(int, input().split())
     swap_route(s1-1, s2-1)
-    print(time_needed_to_arrive_through_station_transfer[station_transfer_in_increasing_time_order[0]])
+    # print(time_needed_to_arrive_through_station_transfer[station_transfer_in_increasing_time_order[0]])
+    print(_, "/", d, "; ", _/d*100, "%")
