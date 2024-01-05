@@ -53,6 +53,9 @@ values = {
     0 : 5,
     5 : 6
 }
-indicies = [0,1,2,3,3,4,5,6]
+indicies = [0,1,2,3,4,5,6]
 
 print(mergesort(indicies, values))
+'''
+output: [3, 4, 2, 1, 6, 0, 5]
+'''
