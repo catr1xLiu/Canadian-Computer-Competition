@@ -73,6 +73,11 @@ def delete_node(tree:Node, path)->Node:
         return delete_node(tree.right, path[1:])
     return delete_node(tree.left, path[1:])
 
+def leftMostNode(tree:Node):
+    if tree.left is None:
+        return tree.value
+    return leftMostNode(tree.left)
+
 
 
 
@@ -157,21 +162,16 @@ def mergesort(indexs, values:dict):
     return merge(left, right, values)
 
 station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
-
+station_transfer_btree = create_btree(station_transfer_in_increasing_time_order)
 
 
 def update_time_needed_arrive_through_transfer(station):
     if station not in station_transfer_in_increasing_time_order:
         return
-    t0 = us()
     time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] + station_to_destination_time_walkways[station]
-    print("time needed1: ",(us()-t0)*1000)
-    station_transfer_in_increasing_time_order.remove(station) # remove takes 10ms to complete TODO use a better data structer
-    print("time needed2: ",(us()-t0)*1000)
-    newindex = b_search_index(time_needed_to_arrive_through_station_transfer[station], station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
-    print("time needed3: ",(us()-t0)*1000)
-    station_transfer_in_increasing_time_order.insert(newindex, station)
-    print("time needed: ",(us()-t0)*1000)
+    newNode = delete_node(station_transfer_btree, find_path(station_transfer_btree, time_needed_to_arrive_through_station_transfer[station], time_needed_to_arrive_through_station_transfer))
+    add_node(station_transfer_btree, newNode, time_needed_to_arrive_through_station_transfer)
+
 
 def swap_route(s1,s2):
     time_subway_arrive[subway_route[s1]] = s2 
@@ -190,5 +190,4 @@ for _ in range(d):
     # print("station in inc:", station_transfer_in_increasing_time_order)
     s1, s2 = map(int, input().split())
     swap_route(s1-1, s2-1)
-    # print(time_needed_to_arrive_through_station_transfer[station_transfer_in_increasing_time_order[0]])
-    print(_, "/", d, "; ", _/d*100, "%")
+    print(leftMostNode(station_transfer_btree))
