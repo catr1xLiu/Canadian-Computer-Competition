@@ -84,9 +84,7 @@ def mergesort(indexs, values:dict):
 
     return merge(left, right, values)
 
-print("start of merge sort")
 station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
-print("end of merge sort")
 
 def b_search_index(value, indexes_sorted:list, values:dict, left_bound=0, rightbound=-1):
     if rightbound == -1:
