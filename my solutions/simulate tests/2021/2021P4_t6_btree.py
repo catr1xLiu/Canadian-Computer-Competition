@@ -59,6 +59,7 @@ def find_path(tree:Node, value, values_map, path=[]):
         return path
 
 def delete_node(tree:Node, path)->Node:
+    print(tree, path)
     '''
     returns the new tree root
     '''
@@ -102,7 +103,7 @@ def delete_node(tree:Node, path)->Node:
         if tree.left.right is None:
             tree.left = tree.left.left
             return tree
-        elif tree.leftt.left is None:
+        elif tree.left.left is None:
             tree.left = tree.left.right
             return tree
         else:
@@ -212,7 +213,9 @@ station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increa
 station_transfer_btree = create_btree(station_transfer_in_increasing_time_order)
 
 def update_time_needed_arrive_through_transfer(station):
+    global station_transfer_btree
     time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] + station_to_destination_time_walkways[station]
+    print(station_transfer_btree)
     station_transfer_btree = delete_node(station_transfer_btree, find_path(station_transfer_btree, time_needed_to_arrive_through_station_transfer[station], time_needed_to_arrive_through_station_transfer))
     add_node(station_transfer_btree, Node(station), time_needed_to_arrive_through_station_transfer)
 
