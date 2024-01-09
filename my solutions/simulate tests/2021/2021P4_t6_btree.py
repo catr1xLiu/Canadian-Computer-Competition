@@ -28,12 +28,14 @@ def create_btree(list_sorted):
     return Node(list_sorted[mid], create_btree(list_sorted[:mid]), create_btree(list_sorted[mid+1:]))
 
 def add_node(tree:Node, newNode:Node, values_map):
+    if tree.value == newNode.value:
+        return
     if values_map[newNode.value] > values_map[tree.value]:
         if tree.right is None:
             tree.right = newNode
         else:
             add_node(tree.right, newNode, values_map)
-    elif values_map[newNode.value] < values_map[tree.value]:
+    else:
         if tree.left is None:
             tree.left = newNode
         else:
@@ -57,19 +59,61 @@ def find_path(tree:Node, value, values_map, path=[]):
         return path
 
 def delete_node(tree:Node, path)->Node:
-    print(path)
-    # None if path invalid
-    # TODO how should we do with main stem?
-    if path == -1 or len(path)==0:
-        return None
+    '''
+    returns the new tree root
+    '''
+    if path == -1:
+        return tree
+    if len(path) == 0:
+        leftmost = leftMostNode(tree.right)
+
+        path_to_leftmost = leftMostNode_path(tree.right)
+        delete_node(tree, path_to_leftmost)
+
+        leftmost.left = tree.left
+        leftmost.right = tree.right
+        return leftmost
     if len(path) == 1:
         if path[0]:
-            swap = tree.right
-            tree.right = None
-            return swap
-        swap = tree.left
-        tree.left = None
-        return swap
+            # delete right node
+            if tree.right.right is None and tree.right.left is None:
+                tree.right = None
+                return tree
+            if tree.right.right is None:
+                tree.right = tree.right.left
+                return tree
+            elif tree.right.left is None:
+                tree.right = tree.right.right
+                return tree
+            else:
+                leftmost = leftMostNode(tree.right.right)
+
+                path_to_leftmost = leftMostNode_path(tree.right.right)
+                delete_node(tree, path_to_leftmost)
+
+                leftmost.left = tree.right.left
+                leftmost.right = tree.right.right
+                return tree
+            
+        # delete left node
+        if tree.left.right is None and tree.left.left is None:
+            tree.left = None
+            return tree
+        if tree.left.right is None:
+            tree.left = tree.left.left
+            return tree
+        elif tree.leftt.left is None:
+            tree.left = tree.left.right
+            return tree
+        else:
+            leftmost = leftMostNode(tree.left.right)
+
+            path_to_leftmost = leftMostNode_path(tree.left.right)
+            delete_node(tree, path_to_leftmost)
+
+            leftmost.left = tree.left.left
+            leftmost.right = tree.left.right
+            return tree
     
     if path[0]:
         return delete_node(tree.right, path[1:])
@@ -79,11 +123,12 @@ def leftMostNode(tree:Node):
     if tree.left is None:
         return tree.value
     return leftMostNode(tree.left)
+def leftMostNode_path(tree:Node):
+    if tree.left is None:
+        return []
+    return [0] + leftMostNode_path(tree.left)
 
 
-
-
-from time import perf_counter as us
 
 n, w, d = map(int, input().split())
 
@@ -166,13 +211,10 @@ def mergesort(indexs, values:dict):
 station_transfer_in_increasing_time_order = mergesort(station_transfer_in_increasing_time_order, time_needed_to_arrive_through_station_transfer)
 station_transfer_btree = create_btree(station_transfer_in_increasing_time_order)
 
-
 def update_time_needed_arrive_through_transfer(station):
-    if station not in station_transfer_in_increasing_time_order:
-        return
     time_needed_to_arrive_through_station_transfer[station] = time_subway_arrive[station] + station_to_destination_time_walkways[station]
-    newNode = delete_node(station_transfer_btree, find_path(station_transfer_btree, time_needed_to_arrive_through_station_transfer[station], time_needed_to_arrive_through_station_transfer))
-    add_node(station_transfer_btree, newNode, time_needed_to_arrive_through_station_transfer)
+    station_transfer_btree = delete_node(station_transfer_btree, find_path(station_transfer_btree, time_needed_to_arrive_through_station_transfer[station], time_needed_to_arrive_through_station_transfer))
+    add_node(station_transfer_btree, Node(station), time_needed_to_arrive_through_station_transfer)
 
 
 def swap_route(s1,s2):
