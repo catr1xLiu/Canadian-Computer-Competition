@@ -53,11 +53,13 @@ def find_path(tree:Node, value, values_map, path=[]):
         if tree.left is None:
             return -1
         return find_path(tree.left, value, values_map, path=path+[0])
-    if tree.value == value:
+    if values_map[tree.value] == value:
         return path
 
 def delete_node(tree:Node, path)->Node:
+    print(path)
     # None if path invalid
+    # TODO how should we do with main stem?
     if path == -1 or len(path)==0:
         return None
     if len(path) == 1:
@@ -181,6 +183,7 @@ def swap_route(s1,s2):
     subway_route[s2] = swap
     update_time_needed_arrive_through_transfer(subway_route[s1])
     update_time_needed_arrive_through_transfer(subway_route[s2])
+    print(station_transfer_btree)
 
 
 ''' 
