@@ -57,18 +57,20 @@ for i in range(len(subway_route)):
 
 # we call the station where we transfer from subway to walways "station_transfer"
 time_needed_to_arrive_through_station_transfer = {}
-time_arrival_possible_results = [] # all the possible time_arrival 
-time_arrival_results_count = dict() # [time_arrival] = amount of stations
+time_arrival_possible_results = list() # all the possible time_arrival 
+time_arrival_results_count = dict()
+for i in range(n):
+    time_arrival_results_count[i] = 0
+
 for station_transfer in range(1, n+1):
     time_arrival_result = time_subway_arrive[station_transfer] + station_to_destination_time_walkways[station_transfer]
     time_needed_to_arrive_through_station_transfer[station_transfer] = time_arrival_result
     
-    t0 = us()
-    if time_arrival_result not in time_arrival_possible_results:
-        time_arrival_possible_results.append(time_arrival_result)
-        time_arrival_results_count[time_arrival_result] = 0
-    print((us()-t0) * 1000)
-    time_arrival_results_count[time_arrival_result] += 1
+    
+    if time_arrival_result < 2000:
+        if time_arrival_results_count[time_arrival_result] == 0:
+            time_arrival_possible_results.append(time_arrival_result)
+        time_arrival_results_count[time_arrival_result] += 1
     print(station_transfer / n * 100, "%")
 time_arrival_possible_results.sort()
 
@@ -90,13 +92,15 @@ def b_search_index(value, list_sorted:list, left_bound=0, rightbound=-1):
 
 def update_time_needed_arrive_through_transfer(station):
     time_arrival_result = time_subway_arrive[station] + station_to_destination_time_walkways[station]
-    if time_arrival_result not in time_arrival_possible_results:
-        time_arrival_possible_results.insert(b_search_index(time_arrival_result, time_arrival_possible_results), time_arrival_result)
-        time_arrival_results_count[time_arrival_result] = 0
-    time_arrival_results_count[time_arrival_result] += 1
+
+    if time_arrival_result < 2000:
+        if time_arrival_results_count[time_arrival_result] == 0:
+            time_arrival_possible_results.insert(b_search_index(time_arrival_result, time_arrival_possible_results), time_arrival_result)
+        time_arrival_results_count[time_arrival_result] += 1
     
-    time_arrival_results_count[time_needed_to_arrive_through_station_transfer[station]] -= 1
-    time_needed_to_arrive_through_station_transfer[station] = time_arrival_result
+    if time_arrival_result < 2000:
+        time_arrival_results_count[time_needed_to_arrive_through_station_transfer[station]] -= 1
+        time_needed_to_arrive_through_station_transfer[station] = time_arrival_result
 
 
 def swap_route(s1,s2):
