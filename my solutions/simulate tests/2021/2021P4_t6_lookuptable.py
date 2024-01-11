@@ -59,7 +59,7 @@ for i in range(len(subway_route)):
 time_needed_to_arrive_through_station_transfer = {}
 time_arrival_possible_results = list() # all the possible time_arrival 
 time_arrival_results_count = dict()
-for i in range(n):
+for i in range(200000):
     time_arrival_results_count[i] = 0
 
 for station_transfer in range(1, n+1):
@@ -68,11 +68,11 @@ for station_transfer in range(1, n+1):
     time_needed_to_arrive_through_station_transfer[station_transfer] = time_arrival_result
     
     
-    if time_arrival_result < 2000:
+    if time_arrival_result < 200000:
         if time_arrival_results_count[time_arrival_result] == 0:
             time_arrival_possible_results.append(time_arrival_result)
         time_arrival_results_count[time_arrival_result] += 1
-    print(station_transfer / n * 100, "%")
+    # print(station_transfer / n * 100, "%")
 time_arrival_possible_results.sort()
 
 def b_search_index(value, list_sorted:list, left_bound=0, rightbound=-1):
@@ -80,7 +80,7 @@ def b_search_index(value, list_sorted:list, left_bound=0, rightbound=-1):
         rightbound = len(list_sorted)
 
     if (rightbound - left_bound == 0):
-        return 0
+        return left_bound
     if (rightbound - left_bound == 1):
         if value < list_sorted[left_bound]:
             return left_bound
@@ -89,20 +89,28 @@ def b_search_index(value, list_sorted:list, left_bound=0, rightbound=-1):
     mid = (left_bound + rightbound) // 2
     if value < list_sorted[mid]:
         return b_search_index(value, list_sorted, left_bound=left_bound, rightbound=mid)
-    return b_search_index(value, list_sorted, left_bound=mid, rightbound=rightbound)
+    if value < list_sorted[mid]:
+        return b_search_index(value, list_sorted, left_bound=mid, rightbound=rightbound)
+    return mid
 
 def update_time_needed_arrive_through_transfer(station):
     time_arrival_result = time_subway_arrive[station] + station_to_destination_time_walkways[station]
 
-    if time_arrival_result < 2000:
+    if time_arrival_result < 200000:
         if time_arrival_results_count[time_arrival_result] == 0:
+            t0 = us()
             time_arrival_possible_results.insert(b_search_index(time_arrival_result, time_arrival_possible_results), time_arrival_result)
+            print("earch time:", (us()-t0) * 1000)
         time_arrival_results_count[time_arrival_result] += 1
     
-    if time_arrival_result < 2000:
+    if time_needed_to_arrive_through_station_transfer[station] < 200000:
         time_arrival_results_count[time_needed_to_arrive_through_station_transfer[station]] -= 1
+        if time_arrival_results_count[time_needed_to_arrive_through_station_transfer[station]] == 0:
+            print("searching", time_arrival_possible_results,  "for", time_needed_to_arrive_through_station_transfer[station])
+            print("found", b_search_index(time_needed_to_arrive_through_station_transfer[station], time_arrival_possible_results))
+            time_arrival_possible_results.pop(b_search_index(time_needed_to_arrive_through_station_transfer[station], time_arrival_possible_results))
         time_needed_to_arrive_through_station_transfer[station] = time_arrival_result
-
+        
 
 def swap_route(s1,s2):
     time_subway_arrive[subway_route[s1]] = s2 
