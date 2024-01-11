@@ -63,6 +63,7 @@ for i in range(n):
     time_arrival_results_count[i] = 0
 
 for station_transfer in range(1, n+1):
+    # TODO we just need to make this 10 times faster
     time_arrival_result = time_subway_arrive[station_transfer] + station_to_destination_time_walkways[station_transfer]
     time_needed_to_arrive_through_station_transfer[station_transfer] = time_arrival_result
     
